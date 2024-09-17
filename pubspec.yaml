@@ -1,0 +1,28 @@
+name: on_text_input_widget
+description: "A new Flutter package project." # TODO
+version: 0.0.1
+homepage:
+license: BSD 3-Clause
+
+# -------------------
+screenshots:
+  - description: 'Example of on_popup_window_widget'
+    path: screenshots/1.gif
+  
+# -------------------
+topics:
+  - text_input
+  - text
+
+environment:
+  sdk: ^3.5.3
+  flutter: ">=1.17.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
