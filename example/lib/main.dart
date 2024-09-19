@@ -22,7 +22,9 @@ class _MyAppState extends State<MyApp> {
             padding: const EdgeInsets.symmetric(horizontal: 24),
             child: Center(
               child: OnTextInputWidget(
+            
                 minLines: 10,
+                maxLines: 9,
               ),
             ),
           ),
