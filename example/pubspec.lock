@@ -131,6 +131,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.15.0"
+  on_process_button_widget:
+    dependency: "direct main"
+    description:
+      name: on_process_button_widget
+      sha256: f64f600490faeac12ce8409d3eead4b2b58cba2d7ed7d9613802e58162f4d71d
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.4"
   on_text_input_widget:
     dependency: "direct main"
     description:
