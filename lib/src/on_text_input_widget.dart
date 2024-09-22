@@ -435,7 +435,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             // -------------------------------------------------------------------------------------
             maxLines: widget.obscureText
                 ? 1
-                : (widget.maxLines ?? 1) <= (widget.minLines ?? 1)
+                : (widget.maxLines ?? 1) < (widget.minLines ?? 1)
                     ? null
                     : widget.maxLines,
             minLines: widget.obscureText ? 1 : widget.minLines,

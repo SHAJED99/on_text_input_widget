@@ -4,8 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 import 'package:on_text_input_widget/on_text_input_widget.dart';
 
-final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
 void main(List<String> args) {
   runApp(const MyApp());
 }
@@ -26,52 +24,12 @@ class _MyAppState extends State<MyApp> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
             child: SingleChildScrollView(
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    OnTextInputWidget(
-                      prefixIcon: Icon(Icons.add_box),
-                      showPrefixLoadingIcon: true,
-                      boxConstraints: BoxConstraints(minHeight: 48),
-                      fillColor: Colors.amber,
-                      isDense: false,
-                      isCollapsed: true,
-                      textAlignVertical: TextAlignVertical(y: 0),
-                      onChangedProcessing: (value) async {
-                        await Future.delayed(Duration(seconds: 2));
-
-                        print("0000 ___ $value");
-                      },
-                    ),
-                    ______Space(),
-                    Row(
-                      children: [
-                        Flexible(
-                          child: OnTextInputWidget(
-                            hintText: "Hello",
-                            // showDetailError: true,
-                            validator: (value) {
-                              return "Press IT";
-                            },
-                          ),
-                        ),
-                        ______Space(),
-                        Flexible(
-                          child: OnProcessButtonWidget(
-                            onDone: (_) {
-                              _formKey.currentState?.validate();
-                            },
-                            child: Text("Okay"),
-                          ),
-                        ),
-                      ],
-                    ),
-                    ______Space(),
-                    Container(height: 24, color: Colors.amber)
-                  ],
-                ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  __OnChangedProcessing(),
+                  __Validator(),
+                ],
               ),
             ),
           ),
@@ -87,5 +45,161 @@ class ______Space extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(height: 8, width: 8);
+  }
+}
+
+class ______Heading extends StatelessWidget {
+  const ______Heading(this.text);
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primaryContainer,
+        borderRadius: BorderRadius.circular(4),
+      ),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class ______Text extends StatelessWidget {
+  const ______Text(this.text, {this.boldText = false});
+
+  final String text;
+  final bool boldText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: boldText ? FontWeight.bold : FontWeight.normal),
+      ),
+    );
+  }
+}
+
+class ______Details extends StatelessWidget {
+  const ______Details({
+    required this.heading,
+    required this.text,
+    required this.child,
+    this.result = "",
+  });
+
+  final String heading;
+  final String text;
+  final Widget child;
+  final String result;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ______Heading("# $heading"),
+        ______Text(text),
+        child,
+        if (result.isNotEmpty) Text("You searched for: $result"),
+        ______Space(),
+        ______Space(),
+      ],
+    );
+  }
+}
+
+//! ------------------------------------------------------------------------------------------------ onChangedProcessing
+class __OnChangedProcessing extends StatefulWidget {
+  const __OnChangedProcessing();
+
+  @override
+  State<__OnChangedProcessing> createState() => __OnChangedProcessingState();
+}
+
+class __OnChangedProcessingState extends State<__OnChangedProcessing> {
+  String result = "";
+
+  @override
+  Widget build(BuildContext context) {
+    return ______Details(
+      heading: "Search with a Onprogress Function",
+      text: "You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server.",
+      result: result,
+      child: OnTextInputWidget(
+        hintText: "Search",
+        prefixIcon: Icon(Icons.search),
+        showPrefixLoadingIcon: true,
+        // showSuffixLoadingIcon: true,
+        onChangedProcessing: (value) async {
+          await Future.delayed(const Duration(seconds: 2));
+          setState(() {
+            result = value;
+          });
+        },
+      ),
+    );
+  }
+}
+
+//! ------------------------------------------------------------------------------------------------ validator
+class __Validator extends StatelessWidget {
+  __Validator();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  String v(String? value) {
+    if (value?.isNotEmpty == true) {
+      return "You entered username: $value";
+    } else {
+      return "Please enter your username";
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Form(
+      key: _formKey,
+      child: Column(
+        children: [
+          ______Details(
+            heading: "Use as a Form Validator",
+            text: "You can use it as a form validator. It will validate the text input when the user input something.\nIf error occurs, it will show the error message.",
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ______Text("Show Error inside of the box", boldText: true),
+                OnTextInputWidget(
+                  prefixIcon: Icon(Icons.person),
+                  hintText: "Email",
+                  validator: v,
+                ),
+                ______Text("Show Error under the box", boldText: true),
+                OnTextInputWidget(
+                  prefixIcon: Icon(Icons.person),
+                  hintText: "Email",
+                  showDetailError: true, //?
+                  validator: v,
+                ),
+              ],
+            ),
+          ),
+
+          // Button
+          OnProcessButtonWidget(
+            onDone: (isSuccess) {
+              _formKey.currentState?.validate();
+            },
+            child: Text("Press Me"),
+          )
+        ],
+      ),
+    );
   }
 }
