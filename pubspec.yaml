@@ -1,12 +1,12 @@
 name: on_text_input_widget
-description: "A new Flutter package project." # TODO
+description: "A text field that makes so many things like online, and offline searching easier."
 version: 0.0.1
-homepage:
+homepage: https://github.com/SHAJED99/on_text_input_widget
 license: BSD 3-Clause
 
 # -------------------
 screenshots:
-  - description: 'Example of on_popup_window_widget'
+  - description: 'Example of on_text_input_widget'
     path: screenshots/1.gif
   
 # -------------------
@@ -25,4 +25,4 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^2.0.0
