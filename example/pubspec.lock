@@ -175,10 +175,10 @@ packages:
     dependency: "direct main"
     description:
       name: on_process_button_widget
-      sha256: f64f600490faeac12ce8409d3eead4b2b58cba2d7ed7d9613802e58162f4d71d
+      sha256: "1ec125cae5ab4578c3d8730e9689363dae95efff4a3e147f35f750545db43045"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.4"
+    version: "2.0.5"
   on_text_input_widget:
     dependency: "direct main"
     description:

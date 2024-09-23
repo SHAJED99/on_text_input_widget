@@ -240,6 +240,8 @@ class __LoginField extends StatelessWidget {
   }
 }
 
+
+//! ------------------------------------------------------------------------------------------------ MatchSize
 class __MatchSize extends StatelessWidget {
   const __MatchSize();
 
@@ -247,24 +249,26 @@ class __MatchSize extends StatelessWidget {
   Widget build(BuildContext context) {
     return ______Details(
       heading: "Example: Same size as the Button",
-      text: "Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev.",
+      text: "Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev. It has same height.",
       child: Row(
         children: [
           // Input Field
-          Flexible(child: OnTextInputWidget(borderRadius: BorderRadius.circular(0))),
-          // ______Space(),
+          Flexible(
+            child: OnTextInputWidget(
+              prefixIcon: Icon(Icons.person),
+            ),
+          ),
+          ______Space(),
 
           // Button
-          Flexible(
-            child: OnProcessButtonWidget(
-              borderRadius: BorderRadius.circular(0),
-              backgroundColor: Colors.transparent,
-              border: Border.all(
-                width: 2,
-                color: Theme.of(context).colorScheme.primary,
-                strokeAlign: BorderSide.strokeAlignInside,
-              ),
+          OnProcessButtonWidget(
+            backgroundColor: Colors.transparent,
+            border: Border.all(
+              width: 2,
+              color: Theme.of(context).colorScheme.primary,
+              strokeAlign: BorderSide.strokeAlignCenter,
             ),
+            child: Icon(Icons.arrow_drop_down_rounded),
           ),
         ],
       ),
