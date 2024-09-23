@@ -25,6 +25,8 @@ To use the `on_text_input_widget` widget in your project, follow these steps:
 
 ### Searching operation from online or local server
 
+You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server. Use \"onChanged\" to search offline.
+
 ```dart
     OnTextInputWidget(
         hintText: "Search",
@@ -51,6 +53,8 @@ To use the `on_text_input_widget` widget in your project, follow these steps:
 
 ### Form Validation
 
+You can use it as a form validator. It will validate the text input when the user input something. If error occurs, it will show the error message.
+
 ```dart
     class __Validator extends StatelessWidget {
         __Validator();
@@ -72,7 +76,7 @@ To use the `on_text_input_widget` widget in your project, follow these steps:
                     children: [
                         ______Details(
                             heading: "Use as a Form Validator",
-                            text: "You can use it as a form validator. It will validate the text input when the user input something.\nIf error occurs, it will show the error message.",
+                            text: "You can use it as a form validator. It will validate the text input when the user input something. If error occurs, it will show the error message.",
                             child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
@@ -115,6 +119,9 @@ To use the `on_text_input_widget` widget in your project, follow these steps:
 ![Example - Form Validation](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/3.gif)
 
 ### Login Form
+
+Customize the textfield as Login Form. Just check the \"CustomTextField1\" example in the example folder.
+
 CustomTextField1
 ```dart
 class CustomTextField1 extends StatefulWidget {
@@ -271,6 +278,7 @@ class _CustomTextField1State extends State<CustomTextField1> {
 }
 ```
 Now add it in your project
+
 ```dart
 Column(
     children: [
@@ -295,5 +303,38 @@ Column(
 ### Example - Login Form
 
 ![Example - Login Form](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/4.gif)
+
+### Same size as the Button
+
+Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev. It has same height.
+
+```dart
+    Row(
+        children: [
+            // Input Field
+            Flexible(
+                child: OnTextInputWidget(
+                    prefixIcon: Icon(Icons.person),
+                ),
+            ),
+            ______Space(),
+
+            // Button
+            OnProcessButtonWidget(
+                backgroundColor: Colors.transparent,
+                border: Border.all(
+                    width: 2,
+                    color: Theme.of(context).colorScheme.primary,
+                    strokeAlign: BorderSide.strokeAlignCenter,
+                ),
+                child: Icon(Icons.arrow_drop_down_rounded),
+            ),
+        ],
+    ),
+```
+
+### Example - Same size as the Button
+
+![Example - Same size as the Button](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/5.gif)
 
 ### And many more.

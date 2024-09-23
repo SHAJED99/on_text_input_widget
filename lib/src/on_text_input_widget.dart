@@ -303,7 +303,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   @override
   void initState() {
     super.initState();
-    textEditingController = widget.textEditingController ?? TextEditingController();
+    textEditingController =
+        widget.textEditingController ?? TextEditingController();
     hintText = widget.hintText;
     borderRadius = widget.borderRadius ?? BorderRadius.circular(8);
 
@@ -332,7 +333,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   maxHeight: widget.loadingIconsSize ?? double.infinity,
                   maxWidth: widget.loadingIconsSize ?? double.infinity,
                 ),
-                child: FittedBox(child: CircularProgressIndicator(color: widget.loadingIconColor ?? Theme.of(context).colorScheme.primary)),
+                child: FittedBox(
+                    child: CircularProgressIndicator(
+                        color: widget.loadingIconColor ??
+                            Theme.of(context).colorScheme.primary)),
               ),
             ],
           );
@@ -349,9 +353,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          icon
-        ],
+        children: [icon],
       ),
     );
   }
@@ -378,7 +380,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
       return Text(
         message!,
         textAlign: widget.textAlign,
-        style: widget.errorTextStyle ?? Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.errorColor ?? Theme.of(context).colorScheme.error, fontWeight: FontWeight.bold),
+        style: widget.errorTextStyle ??
+            Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: widget.errorColor ?? Theme.of(context).colorScheme.error,
+                fontWeight: FontWeight.bold),
       );
     } else {
       return const SizedBox();
@@ -404,8 +409,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    height = widget.boxConstraints?.minHeight ?? Theme.of(context).buttonTheme.height;
-    contentPadding = widget.contentPadding ?? const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+    height = widget.boxConstraints?.minHeight ??
+        Theme.of(context).buttonTheme.height;
+    contentPadding = widget.contentPadding ??
+        const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -432,9 +439,13 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             autocorrect: widget.autocorrect,
             enabled: widget.enabled,
             readOnly: widget.readOnly,
-            cursorColor: widget.cursorColor ?? Theme.of(context).colorScheme.primary,
+            cursorColor:
+                widget.cursorColor ?? Theme.of(context).colorScheme.primary,
             autofillHints: widget.autofillHints,
-            style: widget.style ?? Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+            style: widget.style ??
+                Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.primary,
+                    fontWeight: FontWeight.bold),
 
             // -------------------------------------------------------------------------------------
             maxLines: widget.obscureText
@@ -452,11 +463,15 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             //! Functions --------------------------------------------------------------------------
             onEditingComplete: () {
               unfocusKeyboard();
-              if (widget.onComplete != null) widget.onComplete!(textEditingController.text);
+              if (widget.onComplete != null) {
+                widget.onComplete!(textEditingController.text);
+              }
             },
             onTapOutside: (PointerDownEvent pointerDownEvent) {
               unfocusKeyboard();
-              if (widget.onTapOutside != null) widget.onTapOutside!(pointerDownEvent);
+              if (widget.onTapOutside != null) {
+                widget.onTapOutside!(pointerDownEvent);
+              }
             },
             onChanged: (value) {
               //* On change without processing
@@ -510,7 +525,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               message = widget.validator!(value);
               if (message == null) return null;
               error = true;
-              if (widget.errorCheck != null) widget.errorCheck!(error, message!);
+              if (widget.errorCheck != null) {
+                widget.errorCheck!(error, message!);
+              }
 
               if (widget.showDetailError || widget.errorBuilder != null) {
               } else {
@@ -529,7 +546,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               labelText: widget.labelText,
               labelStyle: widget.labelStyle,
               floatingLabelBehavior: widget.floatingLabelBehavior,
-              constraints: widget.boxConstraints ?? BoxConstraints(minHeight: height),
+              constraints:
+                  widget.boxConstraints ?? BoxConstraints(minHeight: height),
               prefix: widget.prefix,
               suffix: widget.suffix,
               suffixIconConstraints: const BoxConstraints(),
@@ -541,7 +559,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   duration: widget.animationDuration,
                   curve: widget.animationCurve,
                   clipBehavior: widget.clipBehavior,
-                  child: widgetReplacement(showLoadingIcon(widget.showPrefixLoadingIcon) ?? _setIcon(widget.prefixIcon), contentPadding),
+                  child: widgetReplacement(
+                      showLoadingIcon(widget.showPrefixLoadingIcon) ??
+                          _setIcon(widget.prefixIcon),
+                      contentPadding),
                 ),
               ),
               suffixIcon: SizedBox(
@@ -551,43 +572,162 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   duration: widget.animationDuration,
                   curve: widget.animationCurve,
                   clipBehavior: widget.clipBehavior,
-                  child: widgetReplacement(showLoadingIcon(widget.showSuffixLoadingIcon) ?? _setIcon(widget.suffixIcon), contentPadding),
+                  child: widgetReplacement(
+                      showLoadingIcon(widget.showSuffixLoadingIcon) ??
+                          _setIcon(widget.suffixIcon),
+                      contentPadding),
                 ),
               ),
-              filled: widget.fillColor == null ? Theme.of(context).inputDecorationTheme.filled : true,
-              fillColor: widget.fillColor ?? Theme.of(context).inputDecorationTheme.fillColor,
-              hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.primary.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
+              filled: widget.fillColor == null
+                  ? Theme.of(context).inputDecorationTheme.filled
+                  : true,
+              fillColor: widget.fillColor ??
+                  Theme.of(context).inputDecorationTheme.fillColor,
+              hintStyle: !error
+                  ? widget.hintStyle ??
+                      TextStyle(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.5))
+                  : widget.errorStyle ??
+                      widget.hintStyle?.copyWith(
+                          color: Theme.of(context).colorScheme.error) ??
+                      TextStyle(color: Theme.of(context).colorScheme.error),
               errorStyle: const TextStyle(height: -1),
               contentPadding: contentPadding,
-              enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
+              enabledBorder: widget.enabledBorder?.copyWith(
+                      borderSide: BorderSide(
+                          width: widget.borderWidth ??
+                              Theme.of(context)
+                                  .inputDecorationTheme
+                                  .enabledBorder
+                                  ?.borderSide
+                                  .width ??
+                              2,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.5))) ??
                   Theme.of(context).inputDecorationTheme.enabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(
+                        width: widget.borderWidth ??
+                            Theme.of(context)
+                                .inputDecorationTheme
+                                .enabledBorder
+                                ?.borderSide
+                                .width ??
+                            2,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5)),
                   ),
-              focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary)) ??
+              focusedBorder: widget.focusedBorder?.copyWith(
+                      borderSide: BorderSide(
+                          width: widget.borderWidth ??
+                              Theme.of(context)
+                                  .inputDecorationTheme
+                                  .focusedBorder
+                                  ?.borderSide
+                                  .width ??
+                              2,
+                          color: Theme.of(context).colorScheme.primary)) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary),
+                    borderSide: BorderSide(
+                        width: widget.borderWidth ??
+                            Theme.of(context)
+                                .inputDecorationTheme
+                                .focusedBorder
+                                ?.borderSide
+                                .width ??
+                            2,
+                        color: Theme.of(context).colorScheme.primary),
                   ),
-              errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.error)) ??
+              errorBorder: widget.errorBorder?.copyWith(
+                      borderSide: BorderSide(
+                          width: widget.borderWidth ??
+                              Theme.of(context)
+                                  .inputDecorationTheme
+                                  .errorBorder
+                                  ?.borderSide
+                                  .width ??
+                              2,
+                          color: Theme.of(context).colorScheme.error)) ??
                   Theme.of(context).inputDecorationTheme.errorBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.error),
+                    borderSide: BorderSide(
+                        width: widget.borderWidth ??
+                            Theme.of(context)
+                                .inputDecorationTheme
+                                .errorBorder
+                                ?.borderSide
+                                .width ??
+                            2,
+                        color: Theme.of(context).colorScheme.error),
                   ),
-              focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
+              focusedErrorBorder: widget.focusedErrorBorder?.copyWith(
+                      borderSide: BorderSide(
+                          width: widget.borderWidth ??
+                              Theme.of(context)
+                                  .inputDecorationTheme
+                                  .focusedErrorBorder
+                                  ?.borderSide
+                                  .width ??
+                              2,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.5))) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(
+                        width: widget.borderWidth ??
+                            Theme.of(context)
+                                .inputDecorationTheme
+                                .focusedErrorBorder
+                                ?.borderSide
+                                .width ??
+                            2,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5)),
                   ),
-              disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
+              disabledBorder: widget.disabledBorder?.copyWith(
+                      borderSide: BorderSide(
+                          width: widget.borderWidth ??
+                              Theme.of(context)
+                                  .inputDecorationTheme
+                                  .disabledBorder
+                                  ?.borderSide
+                                  .width ??
+                              2,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.1))) ??
                   Theme.of(context).inputDecorationTheme.disabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+                    borderSide: BorderSide(
+                        width: widget.borderWidth ??
+                            Theme.of(context)
+                                .inputDecorationTheme
+                                .disabledBorder
+                                ?.borderSide
+                                .width ??
+                            2,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1)),
                   ),
             ),
           ),
@@ -598,7 +738,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
           duration: widget.animationDuration,
           curve: widget.animationCurve,
           clipBehavior: widget.clipBehavior,
-          child: widget.errorBuilder != null ? widget.errorBuilder!(message ?? "") : errorChild(),
+          child: widget.errorBuilder != null
+              ? widget.errorBuilder!(message ?? "")
+              : errorChild(),
         ),
       ],
     );

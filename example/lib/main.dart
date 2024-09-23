@@ -66,7 +66,10 @@ class ______Heading extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.labelLarge?.copyWith(fontWeight: FontWeight.bold),
+        style: Theme.of(context)
+            .textTheme
+            .labelLarge
+            ?.copyWith(fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -84,7 +87,8 @@ class ______Text extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 4),
       child: Text(
         text,
-        style: Theme.of(context).textTheme.titleSmall?.copyWith(fontWeight: boldText ? FontWeight.bold : FontWeight.normal),
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+            fontWeight: boldText ? FontWeight.bold : FontWeight.normal),
       ),
     );
   }
@@ -134,7 +138,8 @@ class __OnChangedProcessingState extends State<__OnChangedProcessing> {
   Widget build(BuildContext context) {
     return ______Details(
       heading: "Search with a Onprogress Function",
-      text: "You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server.\nUse \"onChanged\" to search offline.",
+      text:
+          "You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server.\nUse \"onChanged\" to search offline.",
       result: result,
       child: OnTextInputWidget(
         hintText: "Search",
@@ -173,7 +178,8 @@ class __Validator extends StatelessWidget {
         children: [
           ______Details(
             heading: "Use as a Form Validator",
-            text: "You can use it as a form validator. It will validate the text input when the user input something.\nIf error occurs, it will show the error message.",
+            text:
+                "You can use it as a form validator. It will validate the text input when the user input something.\nIf error occurs, it will show the error message.",
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -217,29 +223,30 @@ class __LoginField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ______Details(
-        heading: "Example: Login Form",
-        text: "Customize the textfield as Login Form. Just check the \"CustomTextField1\" example in the example folder.",
-        child: Column(
-          children: [
-            // Username field
-            CustomTextField1(
-              keyboardType: TextInputType.emailAddress,
-              hintText: "Enter your email",
-              svg: "lib/assets/icons/message_icon.svg",
-            ),
-            ______Space(),
-            // Password Field
-            CustomTextField1(
-              obscureText: true,
-              keyboardType: TextInputType.visiblePassword,
-              hintText: "Enter your password",
-              svg: "lib/assets/icons/lock_icon.svg",
-            ),
-          ],
-        ));
+      heading: "Example: Login Form",
+      text:
+          "Customize the textfield as Login Form. Just check the \"CustomTextField1\" example in the example folder.",
+      child: Column(
+        children: [
+          // Username field
+          CustomTextField1(
+            keyboardType: TextInputType.emailAddress,
+            hintText: "Enter your email",
+            svg: "lib/assets/icons/message_icon.svg",
+          ),
+          ______Space(),
+          // Password Field
+          CustomTextField1(
+            obscureText: true,
+            keyboardType: TextInputType.visiblePassword,
+            hintText: "Enter your password",
+            svg: "lib/assets/icons/lock_icon.svg",
+          ),
+        ],
+      ),
+    );
   }
 }
-
 
 //! ------------------------------------------------------------------------------------------------ MatchSize
 class __MatchSize extends StatelessWidget {
@@ -249,7 +256,8 @@ class __MatchSize extends StatelessWidget {
   Widget build(BuildContext context) {
     return ______Details(
       heading: "Example: Same size as the Button",
-      text: "Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev. It has same height.",
+      text:
+          "Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev. It has same height.",
       child: Row(
         children: [
           // Input Field

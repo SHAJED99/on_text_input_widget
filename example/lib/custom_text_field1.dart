@@ -80,8 +80,11 @@ class _CustomTextField1State extends State<CustomTextField1> {
           : GestureDetector(
               onTap: () => showText.value = !showText.value,
               child: SvgPicture.asset(
-                showText.value ? "lib/assets/icons/eye_opened_icon.svg" : "lib/assets/icons/eye_closed_icon.svg",
-                colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.primary, BlendMode.srcIn),
+                showText.value
+                    ? "lib/assets/icons/eye_opened_icon.svg"
+                    : "lib/assets/icons/eye_closed_icon.svg",
+                colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.primary, BlendMode.srcIn),
               ),
             );
     }
@@ -108,9 +111,8 @@ class _CustomTextField1State extends State<CustomTextField1> {
         maxLines: widget.maxLine,
         minLines: widget.minLine,
         boxConstraints: widget.boxConstraints,
-        onFocusChange: (isFocused) => {
-          if (widget.obscureText && !isFocused) showText.value = false
-        },
+        onFocusChange: (isFocused) =>
+            {if (widget.obscureText && !isFocused) showText.value = false},
         //! Eye button
         suffixIcon: setSuffixIcon(),
         validator: widget.validator,
@@ -144,12 +146,17 @@ class _CustomTextField1State extends State<CustomTextField1> {
                         errorStatus.value
                             ? Theme.of(context).colorScheme.error
                             : s.isEmpty
-                                ? Theme.of(context).colorScheme.primary.withOpacity(0.5)
+                                ? Theme.of(context)
+                                    .colorScheme
+                                    .primary
+                                    .withOpacity(0.5)
                                 : Theme.of(context).colorScheme.primary,
                         BlendMode.srcIn,
                       ),
                     ),
-                  if (widget.svg.isNotEmpty && widget.prefixChild != null) SizedBox(width: (widget.contentPadding?.horizontal ?? 0) / 2),
+                  if (widget.svg.isNotEmpty && widget.prefixChild != null)
+                    SizedBox(
+                        width: (widget.contentPadding?.horizontal ?? 0) / 2),
                   if (widget.prefixChild != null) widget.prefixChild!,
                 ],
               ),
