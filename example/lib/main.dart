@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
+import 'package:example/custom_text_field1.dart';
 import 'package:flutter/material.dart';
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 import 'package:on_text_input_widget/on_text_input_widget.dart';
@@ -29,6 +30,8 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   __OnChangedProcessing(),
                   __Validator(),
+                  __LoginField(),
+                  __MatchSize(),
                 ],
               ),
             ),
@@ -131,7 +134,7 @@ class __OnChangedProcessingState extends State<__OnChangedProcessing> {
   Widget build(BuildContext context) {
     return ______Details(
       heading: "Search with a Onprogress Function",
-      text: "You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server.",
+      text: "You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server.\nUse \"onChanged\" to search offline.",
       result: result,
       child: OnTextInputWidget(
         hintText: "Search",
@@ -197,7 +200,72 @@ class __Validator extends StatelessWidget {
               _formKey.currentState?.validate();
             },
             child: Text("Press Me"),
-          )
+          ),
+
+          ______Space(),
+          ______Space(),
+        ],
+      ),
+    );
+  }
+}
+
+//! ------------------------------------------------------------------------------------------------ LoginField
+class __LoginField extends StatelessWidget {
+  const __LoginField();
+
+  @override
+  Widget build(BuildContext context) {
+    return ______Details(
+        heading: "Example: Login Form",
+        text: "Customize the textfield as Login Form. Just check the \"CustomTextField1\" example in the example folder.",
+        child: Column(
+          children: [
+            // Username field
+            CustomTextField1(
+              keyboardType: TextInputType.emailAddress,
+              hintText: "Enter your email",
+              svg: "lib/assets/icons/message_icon.svg",
+            ),
+            ______Space(),
+            // Password Field
+            CustomTextField1(
+              obscureText: true,
+              keyboardType: TextInputType.visiblePassword,
+              hintText: "Enter your password",
+              svg: "lib/assets/icons/lock_icon.svg",
+            ),
+          ],
+        ));
+  }
+}
+
+class __MatchSize extends StatelessWidget {
+  const __MatchSize();
+
+  @override
+  Widget build(BuildContext context) {
+    return ______Details(
+      heading: "Example: Same size as the Button",
+      text: "Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev.",
+      child: Row(
+        children: [
+          // Input Field
+          Flexible(child: OnTextInputWidget(borderRadius: BorderRadius.circular(0))),
+          // ______Space(),
+
+          // Button
+          Flexible(
+            child: OnProcessButtonWidget(
+              borderRadius: BorderRadius.circular(0),
+              backgroundColor: Colors.transparent,
+              border: Border.all(
+                width: 2,
+                color: Theme.of(context).colorScheme.primary,
+                strokeAlign: BorderSide.strokeAlignInside,
+              ),
+            ),
+          ),
         ],
       ),
     );

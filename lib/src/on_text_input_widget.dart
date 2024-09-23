@@ -69,6 +69,7 @@ class OnTextInputWidget extends StatefulWidget {
     this.disabledBorder,
     this.animationCurve = Curves.linear,
     this.clipBehavior = Clip.antiAlias,
+    this.borderWidth,
   }) : super(key: key);
 
   /// A controller for an editable text field.
@@ -247,6 +248,9 @@ class OnTextInputWidget extends StatefulWidget {
 
   /// Border style when disabled
   final InputBorder? disabledBorder;
+
+  /// Text input field border width. Default: 2
+  final double? borderWidth;
 
   //! Functions
   /// Function runs when the focused is change. It will be called when the text field is focused or unfocused.
@@ -555,35 +559,35 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               hintStyle: !error ? widget.hintStyle ?? TextStyle(color: Theme.of(context).colorScheme.primary.withOpacity(0.5)) : widget.errorStyle ?? widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error),
               errorStyle: const TextStyle(height: -1),
               contentPadding: contentPadding,
-              enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
+              enabledBorder: widget.enabledBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
                   Theme.of(context).inputDecorationTheme.enabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.enabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
                   ),
-              focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary)) ??
+              focusedBorder: widget.focusedBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary)) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary),
+                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary),
                   ),
-              errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error)) ??
+              errorBorder: widget.errorBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.error)) ??
                   Theme.of(context).inputDecorationTheme.errorBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.error),
+                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.errorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.error),
                   ),
-              focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
+              focusedErrorBorder: widget.focusedErrorBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
+                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.focusedErrorBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.5)),
                   ),
-              disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
+              disabledBorder: widget.disabledBorder?.copyWith(borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1))) ??
                   Theme.of(context).inputDecorationTheme.disabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
-                    borderSide: BorderSide(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+                    borderSide: BorderSide(width: widget.borderWidth ?? Theme.of(context).inputDecorationTheme.disabledBorder?.borderSide.width ?? 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
                   ),
             ),
           ),
