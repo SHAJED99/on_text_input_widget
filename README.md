@@ -2,7 +2,7 @@
 
 A text input field with many functionalities
 
-![Example - on_process_button_widget](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/all.gif)
+![Example - on_text_input_widget](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/6.gif)
 
 
 ### NOTE
@@ -10,149 +10,118 @@ Now Material 3 theme is enabled.
 
 ## Getting Started
 
-To use the `on_process_button_widget` widget in your project, follow these steps:
+To use the `on_text_input_widget` widget in your project, follow these steps:
 
 1. Install the widget according to the instructions on the install page
 
 2. Add this code in your project
 ```dart
-    OnProcessButtonWidget()
+    OnTextInputWidget()
 ```
 
 3. For better understanding follow the example
 
-## Customizing the button
+## Usages of the text field
 
-### Hovering effect
-
-```dart
-    //! Hovering effect && On processing loading indicator
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF86A789),
-        onTap: () async => await onCallFunction(),
-        onHover: (isEnter) => buttonText.value = isEnter ? "Hi" : "Hover Here - Only works in Mouse hovering.",
-        child: Text(buttonText.value),
-    ),
-```
-
-### Example - Hovering effect && On processing loading indicator
-
-![Example - Hovering effect && On processing loading indicator](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/hover.gif)
-
-
-### Request status
+### Searching operation from online or local server
 
 ```dart
-    //! Request status - true and false
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF739072),
-        onTap: () async => await onCallFunction(type: true),
-        // onTap: () async => await onCallFunction(type: false),
-        child: const Text("Request status - true"),
-    ),
-
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF739072),
-        onTap: () async => await onCallFunction(type: false),
-        // onTap: () async => await onCallFunction(type: false),
-        child: const Text("Request status - false"),
-    ),
-```
-
-### Example - Request status - true and false
-
-![Example - Request status - true and false](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/status.gif)
-
-### Double process
-
-```dart
-    //! Double process
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFF4F6F52),
-        onTap: () async {
-        processDone.value = "Running first task.";
-        var s = await onCallFunction(type: true);
-        processDone.value = "First operation status $s";
-        return s;
+    OnTextInputWidget(
+        hintText: "Search",
+        prefixIcon: Icon(Icons.search),
+        showPrefixLoadingIcon: true,
+        // showSuffixLoadingIcon: true,
+        onChanged: (value) {
+            // Use it for offline search
         },
-        onDone: (isSuccess) async {
-        // TODO: You can your homepage here. If onTap function (Login process) return true it will redirect to the homepage.
-        processDone.value = "Running second task.";
-        await onCallFunction();
-        processDone.value = "";
+        onChangedProcessing: (value) async {
+            // Online search operation
+            await Future.delayed(const Duration(seconds: 2));
+            setState(() {
+                result = value;
+            });
         },
-        child: const Text("Double process"),
     ),
-    if (processDone.isNotEmpty) Padding(padding: const EdgeInsets.symmetric(vertical: 8), child: Text("Process status: ${processDone.value}")),
 ```
 
-### Example - Double process
+### Example - Searching operation from online or local server
 
-![Example - Double process](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/double.gif)
+![Example - Searching operation from online or local server](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/2.gif)
 
-### Easily customizable
+
+### Form Validation
 
 ```dart
-    //! Shadow and Icon color can be changed
-    OnProcessButtonWidget(
-        iconColor: Colors.white,
-        backgroundColor: const Color(0XFF3A4D39),
-        onTap: () async => await onCallFunction(type: false),
-        boxShadow: const [
-        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
-        ],
-        child: const Text("My shadow and Icon color can be changed"),
-    ),
+    class __Validator extends StatelessWidget {
+        __Validator();
+        final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-    //! On processing widget is changeable
-    OnProcessButtonWidget(
-        backgroundColor: const Color(0XFFFAE7C9),
-        onTap: () async => await onCallFunction(type: true),
-        onRunningWidget: const Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-            Text(
-            "On processing widget is changed",
-            style: TextStyle(color: Colors.black),
-            ),
-        ],
-        ),
-        onSuccessWidget: const Icon(
-        Icons.wallpaper_rounded,
-        color: Colors.black,
-        ),
-        child: const Text(
-        "On processing and Status widget",
-        style: TextStyle(color: Colors.black),
-        ),
-    ),
+        String v(String? value) {
+            if (value?.isNotEmpty == true) {
+                return "You entered username: $value";
+            } else {
+                return "Please enter your username";
+            }
+        }
+
+        @override
+        Widget build(BuildContext context) {
+            return Form(
+                key: _formKey,
+                child: Column(
+                    children: [
+                        ______Details(
+                            heading: "Use as a Form Validator",
+                            text: "You can use it as a form validator. It will validate the text input when the user input something.\nIf error occurs, it will show the error message.",
+                            child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                    ______Text("Show Error inside of the box", boldText: true),
+                                    OnTextInputWidget(
+                                    prefixIcon: Icon(Icons.person),
+                                    hintText: "Email",
+                                    validator: v,
+                                    ),
+                                    ______Text("Show Error under the box", boldText: true),
+                                    OnTextInputWidget(
+                                    prefixIcon: Icon(Icons.person),
+                                    hintText: "Email",
+                                    showDetailError: true, //?
+                                    validator: v,
+                                    ),
+                                ],
+                            ),
+                        ),
+
+                        // Button
+                        OnProcessButtonWidget(
+                            onDone: (isSuccess) {
+                            _formKey.currentState?.validate();
+                            },
+                            child: Text("Press Me"),
+                        ),
+
+                        ______Space(),
+                        ______Space(),
+                    ],
+                ),
+            );
+        }
+    }
 ```
 
-### Example - Easily customizable
+### Example - Form Validation
 
-![Example - Easily customizable](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/style.gif)
+![Example - Form Validation](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/3.gif)
 
-### Use as a card
+### Login Form
 
 ```dart
-    //! Use as a card
-    const OnProcessButtonWidget(
-        enable: false,
-        contentPadding: EdgeInsets.symmetric(vertical: 24),
-        backgroundColor: Color.fromARGB(255, 242, 242, 242),
-        boxShadow: [
-        BoxShadow(offset: Offset(0, 2), color: Colors.black54, blurRadius: 2)
-        ],
-        child: Text(
-        "I am a Button,\nBut I can be used as a card.",
-        style: TextStyle(color: Colors.black),
-        ),
-    ),
+
 ```
 
-### Example - Use as a card
+### Example - Login Form
 
-![Example - Use as a card](https://raw.githubusercontent.com/SHAJED99/on_process_button_widget/main/screenshots/card.gif)
+![Example - Login Form](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/4.gif)
 
-###
-And many more.
+### And many more.
