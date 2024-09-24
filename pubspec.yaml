@@ -4,14 +4,13 @@ version: 0.0.1
 homepage: https://github.com/SHAJED99/on_text_input_widget
 license: BSD 3-Clause
 
-# -------------------
 screenshots:
   - description: 'Example of on_text_input_widget'
     path: screenshots/1.gif
   
-# -------------------
+
 topics:
-  - text_input
+  - text-input
   - text
 
 environment:
