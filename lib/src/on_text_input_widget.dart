@@ -444,7 +444,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             style: widget.style ??
                 Theme.of(context).textTheme.titleMedium?.copyWith(
                     color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,
+                    height: 1),
 
             // -------------------------------------------------------------------------------------
             maxLines: widget.obscureText
@@ -593,7 +594,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                       widget.hintStyle?.copyWith(
                           color: Theme.of(context).colorScheme.error) ??
                       TextStyle(color: Theme.of(context).colorScheme.error),
-              errorStyle: const TextStyle(height: -1),
+              errorStyle: const TextStyle(height: 0),
               contentPadding: contentPadding,
               enabledBorder: widget.enabledBorder?.copyWith(
                       borderSide: BorderSide(

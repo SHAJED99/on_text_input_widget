@@ -196,6 +196,14 @@ class __Validator extends StatelessWidget {
                   showDetailError: true, //?
                   validator: v,
                 ),
+                ______Text("Phone Number Code", boldText: true),
+                OnTextInputWidget(
+                  prefixIcon: Text("+880"),
+                  hintText: "1...",
+
+                  showDetailError: true, //?
+                  validator: v,
+                ),
               ],
             ),
           ),
