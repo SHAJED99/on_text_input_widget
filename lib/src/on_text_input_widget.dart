@@ -376,14 +376,21 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
   Widget errorChild() {
     if (error && widget.showDetailError && message != null) {
-      return Text(
-        message!,
-        textAlign: widget.textAlign,
-        style: widget.errorTextStyle ??
-            Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: widget.errorColor ?? Theme.of(context).colorScheme.error,
-                fontWeight: FontWeight.bold),
-      );
+      return widget.errorBuilder != null
+          ? widget.errorBuilder!(message ?? "")
+          : Padding(
+              padding: EdgeInsets.symmetric(
+                  vertical: widget.contentPadding?.vertical ?? 4),
+              child: Text(
+                message!,
+                textAlign: widget.textAlign,
+                style: widget.errorTextStyle ??
+                    Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: widget.errorColor ??
+                            Theme.of(context).colorScheme.error,
+                        fontWeight: FontWeight.bold),
+              ),
+            );
     } else {
       return const SizedBox();
     }
@@ -594,7 +601,11 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                       widget.hintStyle?.copyWith(
                           color: Theme.of(context).colorScheme.error) ??
                       TextStyle(color: Theme.of(context).colorScheme.error),
-              errorStyle: const TextStyle(height: 0),
+              errorStyle: const TextStyle(fontSize: 0),
+              // errorMaxLines: 1,
+              // error: const SizedBox(),
+              // errorText: "",
+
               contentPadding: contentPadding,
               enabledBorder: widget.enabledBorder?.copyWith(
                       borderSide: BorderSide(
@@ -738,9 +749,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
           duration: widget.animationDuration,
           curve: widget.animationCurve,
           clipBehavior: widget.clipBehavior,
-          child: widget.errorBuilder != null
-              ? widget.errorBuilder!(message ?? "")
-              : errorChild(),
+          child: errorChild(),
         ),
       ],
     );

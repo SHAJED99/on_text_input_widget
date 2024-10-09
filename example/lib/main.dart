@@ -204,6 +204,17 @@ class __Validator extends StatelessWidget {
                   showDetailError: true, //?
                   validator: v,
                 ),
+                ______Text("Error Builder", boldText: true),
+                OnTextInputWidget(
+                  prefixIcon: Text("+880"),
+                  hintText: "1...",
+
+                  showDetailError: true, //?
+                  validator: v,
+                  errorBuilder: (message) {
+                    return Text(message);
+                  },
+                ),
               ],
             ),
           ),
