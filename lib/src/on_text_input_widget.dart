@@ -6,9 +6,9 @@ class OnTextInputWidget extends StatefulWidget {
   const OnTextInputWidget({
     Key? key,
     this.textEditingController,
-    this.hintText = "",
+    this.hintText = '',
     this.obscureText = false,
-    this.obscuringCharacter = "•",
+    this.obscuringCharacter = '•',
     this.maxLines,
     this.minLines,
     this.maxLength,
@@ -69,7 +69,36 @@ class OnTextInputWidget extends StatefulWidget {
     this.animationCurve = Curves.linear,
     this.clipBehavior = Clip.antiAlias,
     this.borderWidth,
-  }) : super(key: key);
+  })  : svg = '',
+        _isLoginField = false,
+        super(key: key);
+
+  const OnTextInputWidget.IconField({
+    Key? key,
+    this.autofocus = false,
+    this.hintText = '',
+    this.svg = '',
+    this.textEditingController,
+    this.onChanged,
+    this.validator,
+    this.keyboardType = TextInputType.text,
+    this.obscureText = false,
+    this.initialValue,
+    this.onChangedProcessing,
+    this.maxLine = 1,
+    this.minLine = 1,
+    this.prefixChild,
+    this.enable = true,
+    this.readOnly = false,
+    this.border,
+    this.isCollapsed = false,
+    this.boxConstraints,
+    this.isDense = false,
+    this.contentPadding,
+    this.autofillHints,
+    this.suffixIcon,
+  })  : _isLoginField = true,
+        super(key: key);
 
   /// A controller for an editable text field.
   ///
@@ -279,6 +308,13 @@ class OnTextInputWidget extends StatefulWidget {
   /// Function used to customize the error widget.
   final Widget Function(String message)? errorBuilder;
 
+  final int? maxLine;
+  final int? minLine;
+
+  final String svg;
+
+  final bool _isLoginField;
+
   @override
   State<OnTextInputWidget> createState() => _OnTextInputWidgetState();
 }
@@ -377,7 +413,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   Widget errorChild() {
     if (error && widget.showDetailError && message != null) {
       return widget.errorBuilder != null
-          ? widget.errorBuilder!(message ?? "")
+          ? widget.errorBuilder!(message ?? '')
           : Padding(
               padding: EdgeInsets.symmetric(
                   vertical: widget.contentPadding?.vertical ?? 4),
@@ -520,7 +556,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               if (error) {
                 hintText = widget.hintText;
                 error = false;
-                if (widget.errorCheck != null) widget.errorCheck!(error, "");
+                if (widget.errorCheck != null) widget.errorCheck!(error, '');
               }
               if (mounted) setState(() {});
             },
@@ -543,7 +579,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               }
 
               if (mounted) setState(() {});
-              return "";
+              return '';
             },
             decoration: InputDecoration(
               isDense: widget.isDense,
