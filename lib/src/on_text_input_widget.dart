@@ -1,14 +1,20 @@
-import 'dart:async';
+part of '../on_text_input_widget.dart';
 
-import 'package:flutter/material.dart';
-
+/// A highly customizable text input widget for Flutter applications.
+///
+/// This widget provides extensive customization options for styling,
+/// behavior, validation, and interaction with text input fields.
 class OnTextInputWidget extends StatefulWidget {
+  /// Creates a customizable text input widget.
+  ///
+  /// This widget can be configured with numerous options to control
+  /// its appearance and behavior.
   const OnTextInputWidget({
     Key? key,
     this.textEditingController,
-    this.hintText = "",
+    this.hintText = '',
     this.obscureText = false,
-    this.obscuringCharacter = "•",
+    this.obscuringCharacter = '•',
     this.maxLines,
     this.minLines,
     this.maxLength,
@@ -73,125 +79,114 @@ class OnTextInputWidget extends StatefulWidget {
 
   /// A controller for an editable text field.
   ///
-  /// Whenever the user modifies a text field with an associated TextEditingController, the text field updates value and the controller notifies its listeners. Listeners can then read the text and selection properties to learn what the user has typed or how the selection has been updated.
-  ///
-  /// Similarly, if you modify the text or selection properties, the text field will be notified and will update itself appropriately.
-  ///
-  /// A TextEditingController can also be used to provide an initial value for a text field. If you build a text field with a controller that already has text, the text field will use that text as its initial value.
-  ///
-  /// The value (as well as text and selection) of this controller can be updated from within a listener added to this controller. Be aware of infinite loops since the listener will also be notified of the changes made from within itself. Modifying the composing region from within a listener can also have a bad interaction with some input methods. Gboard, for example, will try to restore the composing region of the text if it was modified programmatically, creating an infinite loop of communications between the framework and the input method. Consider using TextInputFormatters instead for as-you-type text modification.
-  ///
-  /// If both the text and selection properties need to be changed, set the controller's value instead. Setting text will clear the selection and composing range.
-  ///
-  /// Remember to dispose of the TextEditingController when it is no longer needed. This will ensure we discard any resources used by the object.
+  /// Whenever the user modifies a text field with an associated
+  /// TextEditingController, the text field updates value and the controller
+  /// notifies its listeners.
   final TextEditingController? textEditingController;
 
   /// Text that suggests what sort of input the field accepts.
   final String hintText;
 
-  /// Obscure Text Default obscureText: false
+  /// Whether to hide the text being edited (for passwords).
   final bool obscureText;
 
-  /// Obscuring character. Default: •
+  /// Character used to obscure text when obscureText is true.
   final String obscuringCharacter;
 
-  /// Max Number of line
+  /// Maximum number of lines for the text field.
   final int? maxLines;
 
-  /// Min Number of line
+  /// Minimum number of lines for the text field.
   final int? minLines;
 
-  /// Max Character length
+  /// Maximum number of characters allowed in the text field.
   final int? maxLength;
 
-  /// Animation Duration. Default: Duration(milliseconds: 500
+  /// Duration for animations in the widget.
   final Duration animationDuration;
 
-  /// Animation Curve. Default: Curves.linear
+  /// Curve used for animations in the widget.
   final Curve animationCurve;
 
-  /// Animation clip behavior. Default: Clip.antiAlias
+  /// How to clip animated content.
   final Clip clipBehavior;
 
-  /// The vertical alignment of text within an input box.
-  ///
-  /// A single y value that can range from -1.0 to 1.0. -1.0 aligns to the top of an input box so that the top of the first line of text fits within the box and its padding. 0.0 aligns to the center of the box. 1.0 aligns so that the bottom of the last line of text aligns with the bottom interior edge of the input box.
+  /// The vertical alignment of text within the input box.
   final TextAlignVertical? textAlignVertical;
 
-  /// The border radius of the input box. Default: BorderRadius.circular(8)
+  /// The border radius of the input box.
   final BorderRadius? borderRadius;
 
-  /// Initial Value of text field
+  /// Initial value of the text field.
   final String? initialValue;
 
-  /// Focus Node of text field
+  /// Focus node for controlling the focus of this text field.
   final FocusNode? focusNode;
 
-  /// Configures how the platform keyboard will select an uppercase or lowercase keyboard.
-  /// Only supports text keyboards, other keyboard types will ignore this configuration. Capitalization is locale-aware.
+  /// Controls keyboard capitalization behavior.
   final TextCapitalization textCapitalization;
 
-  /// OnChangedProcessing function waiting duration. Default: Duration(milliseconds: 1000)
+  /// Debounce duration for processing text changes.
   final Duration onChangeDebouncer;
 
-  /// Select full text inside the input field when it is clicked. Default: false
+  /// Whether to select all text when the field is tapped.
   final bool fullTextSelection;
 
-  /// It will show error under the text field.
+  /// Whether to show detailed error messages below the field.
   final bool showDetailError;
 
-  /// Widget that will be seen during the onChangedProcessing function is running
+  /// Custom loading indicator widget.
   final Widget? loadingIcon;
 
-  /// Loading icon size. Default: 24
+  /// Size of the loading indicator.
   final double? loadingIconsSize;
 
-  /// Default loading icon color. Default: Theme.of(context).colorScheme.primary
+  /// Color of the loading indicator.
   final Color? loadingIconColor;
 
-  /// Padding between Icon & Text.
+  /// Padding within the text field.
   final EdgeInsetsGeometry? contentPadding;
 
-  /// Input text field box constraint.
+  /// Size constraints for the text field.
   final BoxConstraints? boxConstraints;
 
-  /// Text alignment in the Text Field
+  /// Text alignment within the field.
   final TextAlign textAlign;
 
-  /// Error text style. Default: Theme.of(context).textTheme.bodySmall?.copyWith(color: widget.errorColor ?? Theme.of(context).colorScheme.error, fontWeight: FontWeight.bold)
+  /// Style for error text.
   final TextStyle? errorTextStyle;
 
-  /// Error text color. Default: Theme.of(context).colorScheme.error
+  /// Color for error states.
   final Color? errorColor;
 
-  /// Keyboard Type of the text input. Default: TextInputType.text
+  /// Type of keyboard to display.
   final TextInputType keyboardType;
 
-  /// If true it will automatically open virtual keyboard. Default: false
+  /// Whether the field should automatically get focus.
   final bool autofocus;
 
-  /// If true, it will show suggestion. Default: true
+  /// Whether to enable autocorrect.
   final bool autocorrect;
 
-  /// Enable or disable the textfield. Default: true
+  /// Whether the field is enabled.
   final bool enabled;
 
-  /// If true, the textfield is only readable. Default: false
+  /// Whether the field is read-only.
   final bool readOnly;
 
-  /// Cursor color of the text field. Default: Theme.of(context).colorScheme.primary
+  /// Color of the cursor.
   final Color? cursorColor;
 
-  /// Auto fill hint texts.
+  /// Hints for autofill functionality.
   final List<String>? autofillHints;
 
-  /// Text style. Default: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary, fontWeight: FontWeight.bold),
+  /// Text style for the input.
   final TextStyle? style;
 
-  /// Whether the [InputDecorator.child] is part of a dense form (i.e., uses less vertical space). Default: True
+  /// Whether the field uses less vertical space.
   final bool isDense;
 
-  /// Whether the decoration is the same size as the input field. A collapsed decoration cannot have [labelText], [errorText], an [icon]. To create a collapsed input decoration, use [InputDecoration.collapsed].
+  /// Whether the decoration is the same size as the input field.
   final bool isCollapsed;
 
   /// Optional widget that describes the input field.
@@ -200,83 +195,82 @@ class OnTextInputWidget extends StatefulWidget {
   /// Optional text that describes the input field.
   final String? labelText;
 
-  /// The style to use for [InputDecoration.labelText] when the label is on top of the input field.  If null, the default style is used.
+  /// Style for the label text.
   final TextStyle? labelStyle;
 
-  /// Defines how the floating label should behave.
+  /// How the floating label should behave.
   final FloatingLabelBehavior? floatingLabelBehavior;
 
-  /// Optional widget to place on the line before the input.
+  /// Widget to place before the input.
   final Widget? prefix;
 
-  /// Optional widget to place on the line after the input.
+  /// Widget to place after the input.
   final Widget? suffix;
 
-  /// Prefix/Before Icon
+  /// Icon to display before the input.
   final Widget? prefixIcon;
 
-  /// Suffix/After Icon
+  /// Icon to display after the input.
   final Widget? suffixIcon;
 
-  /// If true, the loading Icon will be shown on the left side of the text field. Default: false
+  /// Whether to show a loading indicator before the input.
   final bool showPrefixLoadingIcon;
 
-  /// If true, the loading Icon will be shown on the right side of the text field. Default: false
+  /// Whether to show a loading indicator after the input.
   final bool showSuffixLoadingIcon;
 
-  /// Text field fill color. Default: widget.fillColor == null ? Theme.of(context).inputDecorationTheme.filled : true
+  /// Background color of the text field.
   final Color? fillColor;
 
-  /// Hint text style. Default: Theme.of(context).colorScheme.primary.withOpacity(0.5)
+  /// Style for the hint text.
   final TextStyle? hintStyle;
 
-  /// Error text style. Default: widget.hintStyle?.copyWith(color: Theme.of(context).colorScheme.error) ?? TextStyle(color: Theme.of(context).colorScheme.error)
+  /// Style for error text.
   final TextStyle? errorStyle;
 
-  /// Border style when enabled
+  /// Border style when the field is enabled.
   final InputBorder? enabledBorder;
 
-  /// Border style when focused
+  /// Border style when the field is focused.
   final InputBorder? focusedBorder;
 
-  /// Border style when error occurred
+  /// Border style when the field has an error.
   final InputBorder? errorBorder;
 
-  /// Border style when error occurred and focused
+  /// Border style when the field has an error and is focused.
   final InputBorder? focusedErrorBorder;
 
-  /// Border style when disabled
+  /// Border style when the field is disabled.
   final InputBorder? disabledBorder;
 
-  /// Text input field border width. Default: 2
+  /// Width of the border.
   final double? borderWidth;
 
-  //! Functions
-  /// Function runs when the focused is change. It will be called when the text field is focused or unfocused.
+  /// Called when the focus state changes.
   final Function(bool isFocused)? onFocusChange;
 
-  /// Function runs when text field editing is completed.
+  /// Called when editing is complete.
   final void Function(String? value)? onComplete;
 
-  /// Function runs when pressing outside of the text field
+  /// Called when tapping outside the field.
   final void Function(PointerDownEvent pointerDownEvent)? onTapOutside;
 
-  /// Creates a [FormField] that contains a [TextField].
+  /// Validates the input and returns an error message if invalid.
   final String? Function(String? value)? validator;
 
-  /// Function runs when the text field is tapped
+  /// Called when the field is tapped.
   final void Function()? onTap;
 
-  /// Function runs when the text is changed in the text field. (Not async operation, Used for offline search)
+  /// Called when the text changes.
   final void Function(String value)? onChanged;
 
-  /// Function runs when the text is changed in the text field. (Async operation, Used for online search)
+  /// Async callback for processing text changes with debouncing.
   final Future<void>? Function(String value)? onChangedProcessing;
 
-  /// Function runs when the form is wrongly submitted.
+  /// Called when validation fails.
   final void Function(bool error, String message)? errorCheck;
 
-  /// Function used to customize the error widget.
+  /// Custom builder for error messages.
   final Widget Function(String message)? errorBuilder;
 
   @override
@@ -289,7 +283,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   Offset? focusNode;
   bool firstTimeTap = false;
   Timer? debounce;
-  List<String> searchProductList = [];
+  List<String> searchProductList = <String>[];
   bool isIdle = true;
   bool error = false;
   String? message;
@@ -326,16 +320,18 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
       return widget.loadingIcon ??
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
+            children: <Widget>[
               Container(
                 constraints: BoxConstraints(
                   maxHeight: widget.loadingIconsSize ?? double.infinity,
                   maxWidth: widget.loadingIconsSize ?? double.infinity,
                 ),
                 child: FittedBox(
-                    child: CircularProgressIndicator(
-                        color: widget.loadingIconColor ??
-                            Theme.of(context).colorScheme.primary)),
+                  child: CircularProgressIndicator(
+                    color: widget.loadingIconColor ??
+                        Theme.of(context).colorScheme.primary,
+                  ),
+                ),
               ),
             ],
           );
@@ -352,7 +348,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [icon],
+        children: <Widget>[icon],
       ),
     );
   }
@@ -362,7 +358,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
     if (wez == null) return SizedBox(width: padding.horizontal);
 
-    // widget.boxConstraints.minWidth ?? BoxConstraints(minWidth: Theme.of(context).buttonTheme.height),
+    // widget.boxConstraints.minWidth ??
+    // BoxConstraints(minWidth: Theme.of(context).buttonTheme.height),
 
     return Container(
       // const BoxConstraints(minWidth: 16)
@@ -377,18 +374,20 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   Widget errorChild() {
     if (error && widget.showDetailError && message != null) {
       return widget.errorBuilder != null
-          ? widget.errorBuilder!(message ?? "")
+          ? widget.errorBuilder!(message ?? '')
           : Padding(
               padding: EdgeInsets.symmetric(
-                  vertical: widget.contentPadding?.vertical ?? 4),
+                vertical: widget.contentPadding?.vertical ?? 4,
+              ),
               child: Text(
                 message!,
                 textAlign: widget.textAlign,
                 style: widget.errorTextStyle ??
                     Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: widget.errorColor ??
-                            Theme.of(context).colorScheme.error,
-                        fontWeight: FontWeight.bold),
+                          color: widget.errorColor ??
+                              Theme.of(context).colorScheme.error,
+                          fontWeight: FontWeight.bold,
+                        ),
               ),
             );
     } else {
@@ -422,9 +421,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
     return Column(
       mainAxisSize: MainAxisSize.min,
-      children: [
+      children: <Widget>[
         Focus(
-          onFocusChange: (value) {
+          onFocusChange: (bool value) {
             if (value) focusNode = FocusManager.instance.primaryFocus?.offset;
             firstTimeTap = false;
             if (!value) {
@@ -450,11 +449,12 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             autofillHints: widget.autofillHints,
             style: widget.style ??
                 Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                    height: 1),
+                      color: Theme.of(context).colorScheme.primary,
+                      fontWeight: FontWeight.bold,
+                      height: 1,
+                    ),
 
-            // -------------------------------------------------------------------------------------
+            // -----------------------------------------------------------------
             maxLines: widget.obscureText
                 ? 1
                 : (widget.maxLines ?? 1) < (widget.minLines ?? 1)
@@ -463,11 +463,11 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             minLines: widget.obscureText ? 1 : widget.minLines,
             maxLength: widget.maxLength,
 
-            // -------------------------------------------------------------------------------------
+            // -----------------------------------------------------------------
             textAlignVertical: widget.textAlignVertical,
             textAlign: widget.textAlign,
 
-            //! Functions --------------------------------------------------------------------------
+            //! Functions ------------------------------------------------------
             onEditingComplete: () {
               unfocusKeyboard();
               if (widget.onComplete != null) {
@@ -480,7 +480,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 widget.onTapOutside!(pointerDownEvent);
               }
             },
-            onChanged: (value) {
+            onChanged: (String value) {
               //* On change without processing
               if (widget.onChanged != null) widget.onChanged!(value);
 
@@ -493,7 +493,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   () async {
                     while (isIdle && searchProductList.isNotEmpty) {
                       String searchingProduct = searchProductList.last;
-                      searchProductList = [];
+                      searchProductList = <String>[];
                       if (mounted) setState(() => isIdle = false);
                       await widget.onChangedProcessing!(searchingProduct);
                       if (mounted) setState(() => isIdle = true);
@@ -520,11 +520,11 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               if (error) {
                 hintText = widget.hintText;
                 error = false;
-                if (widget.errorCheck != null) widget.errorCheck!(error, "");
+                if (widget.errorCheck != null) widget.errorCheck!(error, '');
               }
               if (mounted) setState(() {});
             },
-            validator: (value) {
+            validator: (String? value) {
               message = null;
               if (mounted) setState(() {});
 
@@ -543,7 +543,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               }
 
               if (mounted) setState(() {});
-              return "";
+              return '';
             },
             decoration: InputDecoration(
               isDense: widget.isDense,
@@ -567,9 +567,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   curve: widget.animationCurve,
                   clipBehavior: widget.clipBehavior,
                   child: widgetReplacement(
-                      showLoadingIcon(widget.showPrefixLoadingIcon) ??
-                          _setIcon(widget.prefixIcon),
-                      contentPadding),
+                    showLoadingIcon(widget.showPrefixLoadingIcon) ??
+                        _setIcon(widget.prefixIcon),
+                    contentPadding,
+                  ),
                 ),
               ),
               suffixIcon: SizedBox(
@@ -580,9 +581,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                   curve: widget.animationCurve,
                   clipBehavior: widget.clipBehavior,
                   child: widgetReplacement(
-                      showLoadingIcon(widget.showSuffixLoadingIcon) ??
-                          _setIcon(widget.suffixIcon),
-                      contentPadding),
+                    showLoadingIcon(widget.showSuffixLoadingIcon) ??
+                        _setIcon(widget.suffixIcon),
+                    contentPadding,
+                  ),
                 ),
               ),
               filled: widget.fillColor == null
@@ -593,13 +595,15 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               hintStyle: !error
                   ? widget.hintStyle ??
                       TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.5))
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5),
+                      )
                   : widget.errorStyle ??
                       widget.hintStyle?.copyWith(
-                          color: Theme.of(context).colorScheme.error) ??
+                        color: Theme.of(context).colorScheme.error,
+                      ) ??
                       TextStyle(color: Theme.of(context).colorScheme.error),
               errorStyle: const TextStyle(fontSize: 0),
               // errorMaxLines: 1,
@@ -608,137 +612,152 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
               contentPadding: contentPadding,
               enabledBorder: widget.enabledBorder?.copyWith(
-                      borderSide: BorderSide(
-                          width: widget.borderWidth ??
-                              Theme.of(context)
-                                  .inputDecorationTheme
-                                  .enabledBorder
-                                  ?.borderSide
-                                  .width ??
-                              2,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.5))) ??
+                    borderSide: BorderSide(
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .enabledBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.5),
+                    ),
+                  ) ??
                   Theme.of(context).inputDecorationTheme.enabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
-                        width: widget.borderWidth ??
-                            Theme.of(context)
-                                .inputDecorationTheme
-                                .enabledBorder
-                                ?.borderSide
-                                .width ??
-                            2,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.5)),
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .enabledBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.5),
+                    ),
                   ),
               focusedBorder: widget.focusedBorder?.copyWith(
-                      borderSide: BorderSide(
-                          width: widget.borderWidth ??
-                              Theme.of(context)
-                                  .inputDecorationTheme
-                                  .focusedBorder
-                                  ?.borderSide
-                                  .width ??
-                              2,
-                          color: Theme.of(context).colorScheme.primary)) ??
+                    borderSide: BorderSide(
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .focusedBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
-                        width: widget.borderWidth ??
-                            Theme.of(context)
-                                .inputDecorationTheme
-                                .focusedBorder
-                                ?.borderSide
-                                .width ??
-                            2,
-                        color: Theme.of(context).colorScheme.primary),
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .focusedBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
                   ),
               errorBorder: widget.errorBorder?.copyWith(
-                      borderSide: BorderSide(
-                          width: widget.borderWidth ??
-                              Theme.of(context)
-                                  .inputDecorationTheme
-                                  .errorBorder
-                                  ?.borderSide
-                                  .width ??
-                              2,
-                          color: Theme.of(context).colorScheme.error)) ??
+                    borderSide: BorderSide(
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .errorBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
+                  ) ??
                   Theme.of(context).inputDecorationTheme.errorBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
-                        width: widget.borderWidth ??
-                            Theme.of(context)
-                                .inputDecorationTheme
-                                .errorBorder
-                                ?.borderSide
-                                .width ??
-                            2,
-                        color: Theme.of(context).colorScheme.error),
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .errorBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                   ),
               focusedErrorBorder: widget.focusedErrorBorder?.copyWith(
-                      borderSide: BorderSide(
-                          width: widget.borderWidth ??
-                              Theme.of(context)
-                                  .inputDecorationTheme
-                                  .focusedErrorBorder
-                                  ?.borderSide
-                                  .width ??
-                              2,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.5))) ??
+                    borderSide: BorderSide(
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .focusedErrorBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.5),
+                    ),
+                  ) ??
                   Theme.of(context).inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
-                        width: widget.borderWidth ??
-                            Theme.of(context)
-                                .inputDecorationTheme
-                                .focusedErrorBorder
-                                ?.borderSide
-                                .width ??
-                            2,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.5)),
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .focusedErrorBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.5),
+                    ),
                   ),
               disabledBorder: widget.disabledBorder?.copyWith(
-                      borderSide: BorderSide(
-                          width: widget.borderWidth ??
-                              Theme.of(context)
-                                  .inputDecorationTheme
-                                  .disabledBorder
-                                  ?.borderSide
-                                  .width ??
-                              2,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.1))) ??
+                    borderSide: BorderSide(
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .disabledBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.1),
+                    ),
+                  ) ??
                   Theme.of(context).inputDecorationTheme.disabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
-                        width: widget.borderWidth ??
-                            Theme.of(context)
-                                .inputDecorationTheme
-                                .disabledBorder
-                                ?.borderSide
-                                .width ??
-                            2,
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.1)),
+                      width: widget.borderWidth ??
+                          Theme.of(context)
+                              .inputDecorationTheme
+                              .disabledBorder
+                              ?.borderSide
+                              .width ??
+                          2,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.1),
+                    ),
                   ),
             ),
           ),
@@ -752,38 +771,6 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
           child: errorChild(),
         ),
       ],
-    );
-  }
-}
-
-class _CustomAnimatedSize extends StatelessWidget {
-  const _CustomAnimatedSize({
-    Key? key,
-    this.child,
-    required this.alignment,
-    required this.duration,
-    required this.curve,
-    required this.clipBehavior,
-    this.widthFactor,
-  }) : super(key: key);
-  final Widget? child;
-  final AlignmentGeometry alignment;
-  final Duration duration;
-  final Curve curve;
-  final Clip clipBehavior;
-  final double? widthFactor;
-
-  @override
-  Widget build(BuildContext context) {
-    return FractionallySizedBox(
-      widthFactor: widthFactor,
-      child: AnimatedSize(
-        curve: Curves.easeInOut,
-        clipBehavior: clipBehavior,
-        alignment: alignment,
-        duration: duration,
-        child: child ?? const SizedBox(),
-      ),
     );
   }
 }

@@ -1,6 +1,5 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors
 
-import 'package:example/custom_text_field1.dart';
 import 'package:flutter/material.dart';
 import 'package:on_process_button_widget/on_process_button_widget.dart';
 import 'package:on_text_input_widget/on_text_input_widget.dart';
@@ -248,14 +247,14 @@ class __LoginField extends StatelessWidget {
       child: Column(
         children: [
           // Username field
-          CustomTextField1(
+          OnTextInputWidgetUserField(
             keyboardType: TextInputType.emailAddress,
             hintText: "Enter your email",
             svg: "lib/assets/icons/message_icon.svg",
           ),
           ______Space(),
           // Password Field
-          CustomTextField1(
+          OnTextInputWidgetUserField(
             obscureText: true,
             keyboardType: TextInputType.visiblePassword,
             hintText: "Enter your password",
