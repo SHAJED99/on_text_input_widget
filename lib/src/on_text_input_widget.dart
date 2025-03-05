@@ -102,17 +102,35 @@ class OnTextInputWidget extends StatefulWidget {
 
   /// A controller for an editable text field.
   ///
-  /// Whenever the user modifies a text field with an associated TextEditingController, the text field updates value and the controller notifies its listeners. Listeners can then read the text and selection properties to learn what the user has typed or how the selection has been updated.
+  /// Whenever the user modifies a text field with an associated
+  /// [TextEditingController], the text field updates value and the controller
+  /// notifies its listeners. Listeners can then read the text and selection
+  /// properties to learn what the user has typed or how the selection has been
+  /// updated.
   ///
-  /// Similarly, if you modify the text or selection properties, the text field will be notified and will update itself appropriately.
+  /// Similarly, if you modify the text or selection properties, the text field
+  /// will be notified and will update itself appropriately.
   ///
-  /// A TextEditingController can also be used to provide an initial value for a text field. If you build a text field with a controller that already has text, the text field will use that text as its initial value.
+  /// A [TextEditingController] can also be used to provide an initial value for
+  /// a text field. If you build a text field with a controller that already has
+  /// text, the text field will use that text as its initial value.
   ///
-  /// The value (as well as text and selection) of this controller can be updated from within a listener added to this controller. Be aware of infinite loops since the listener will also be notified of the changes made from within itself. Modifying the composing region from within a listener can also have a bad interaction with some input methods. Gboard, for example, will try to restore the composing region of the text if it was modified programmatically, creating an infinite loop of communications between the framework and the input method. Consider using TextInputFormatters instead for as-you-type text modification.
+  /// The value (as well as text and selection) of this controller can be
+  /// updated from within a listener added to this controller. Be aware of
+  /// infinite loops since the listener will also be notified of the changes
+  /// made from within itself. Modifying the composing region from within a
+  /// listener can also have a bad interaction with some input methods. Gboard,
+  /// for example, will try to restore the composing region of the text if it
+  /// was modified programmatically, creating an infinite loop of communications
+  /// between the framework and the input method. Consider using
+  /// TextInputFormatters instead for as-you-type text modification.
   ///
-  /// If both the text and selection properties need to be changed, set the controller's value instead. Setting text will clear the selection and composing range.
+  /// If both the text and selection properties need to be changed, set the
+  /// controller's value instead. Setting text will clear the selection and
+  /// composing range.
   ///
-  /// Remember to dispose of the TextEditingController when it is no longer needed. This will ensure we discard any resources used by the object.
+  /// Remember to dispose of the TextEditingController when it is no longer
+  /// needed. This will ensure we discard any resources used by the object.
   final TextEditingController? textEditingController;
 
   /// Text that suggests what sort of input the field accepts.
