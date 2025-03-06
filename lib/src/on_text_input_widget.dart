@@ -372,6 +372,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   }
 
   Widget errorChild() {
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
     if (error && widget.showDetailError && message != null) {
       return widget.errorBuilder != null
           ? widget.errorBuilder!(message ?? '')
@@ -383,11 +386,10 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 message!,
                 textAlign: widget.textAlign,
                 style: widget.errorTextStyle ??
-                    Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: widget.errorColor ??
-                              Theme.of(context).colorScheme.error,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    textTheme.bodySmall?.copyWith(
+                      color: widget.errorColor ?? colorScheme.error,
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             );
     } else {
@@ -414,8 +416,11 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    height = widget.boxConstraints?.minHeight ??
-        Theme.of(context).buttonTheme.height;
+    final ThemeData theme = Theme.of(context);
+    final ColorScheme colorScheme = theme.colorScheme;
+    final TextTheme textTheme = theme.textTheme;
+
+    height = widget.boxConstraints?.minHeight ?? theme.buttonTheme.height;
     contentPadding = widget.contentPadding ??
         const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
 
@@ -444,15 +449,14 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             autocorrect: widget.autocorrect,
             enabled: widget.enabled,
             readOnly: widget.readOnly,
-            cursorColor:
-                widget.cursorColor ?? Theme.of(context).colorScheme.primary,
+            cursorColor: widget.cursorColor ?? colorScheme.primary,
             autofillHints: widget.autofillHints,
             style: widget.style ??
-                Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontWeight: FontWeight.bold,
-                      height: 1,
-                    ),
+                textTheme.titleMedium?.copyWith(
+                  color: colorScheme.primary,
+                  fontWeight: FontWeight.bold,
+                  height: 1,
+                ),
 
             // -----------------------------------------------------------------
             maxLines: widget.obscureText
@@ -588,23 +592,18 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 ),
               ),
               filled: widget.fillColor == null
-                  ? Theme.of(context).inputDecorationTheme.filled
+                  ? theme.inputDecorationTheme.filled
                   : true,
-              fillColor: widget.fillColor ??
-                  Theme.of(context).inputDecorationTheme.fillColor,
+              fillColor:
+                  widget.fillColor ?? theme.inputDecorationTheme.fillColor,
               hintStyle: !error
                   ? widget.hintStyle ??
-                      TextStyle(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .primary
-                            .withOpacity(0.5),
-                      )
+                      TextStyle(color: colorScheme.primary.withAlpha(127))
                   : widget.errorStyle ??
                       widget.hintStyle?.copyWith(
-                        color: Theme.of(context).colorScheme.error,
+                        color: colorScheme.error,
                       ) ??
-                      TextStyle(color: Theme.of(context).colorScheme.error),
+                      TextStyle(color: colorScheme.error),
               errorStyle: const TextStyle(fontSize: 0),
               // errorMaxLines: 1,
               // error: const SizedBox(),
@@ -614,149 +613,101 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               enabledBorder: widget.enabledBorder?.copyWith(
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .enabledBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.enabledBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.5),
+                      color: colorScheme.primary.withAlpha(127),
                     ),
                   ) ??
-                  Theme.of(context).inputDecorationTheme.enabledBorder ??
+                  theme.inputDecorationTheme.enabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .enabledBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.enabledBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.5),
+                      color: colorScheme.primary.withAlpha(127),
                     ),
                   ),
               focusedBorder: widget.focusedBorder?.copyWith(
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .focusedBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.focusedBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                   ) ??
-                  Theme.of(context).inputDecorationTheme.focusedBorder ??
+                  theme.inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .focusedBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.focusedBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context).colorScheme.primary,
+                      color: colorScheme.primary,
                     ),
                   ),
               errorBorder: widget.errorBorder?.copyWith(
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .errorBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.errorBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context).colorScheme.error,
+                      color: colorScheme.error,
                     ),
                   ) ??
-                  Theme.of(context).inputDecorationTheme.errorBorder ??
+                  theme.inputDecorationTheme.errorBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .errorBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.errorBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context).colorScheme.error,
+                      color: colorScheme.error,
                     ),
                   ),
               focusedErrorBorder: widget.focusedErrorBorder?.copyWith(
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .focusedErrorBorder
-                              ?.borderSide
-                              .width ??
+                          theme.inputDecorationTheme.focusedErrorBorder
+                              ?.borderSide.width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.5),
+                      color: colorScheme.primary.withAlpha(127),
                     ),
                   ) ??
-                  Theme.of(context).inputDecorationTheme.focusedBorder ??
+                  theme.inputDecorationTheme.focusedBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .focusedErrorBorder
-                              ?.borderSide
-                              .width ??
+                          theme.inputDecorationTheme.focusedErrorBorder
+                              ?.borderSide.width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.5),
+                      color: colorScheme.primary.withAlpha(127),
                     ),
                   ),
               disabledBorder: widget.disabledBorder?.copyWith(
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .disabledBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.disabledBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.1),
+                      color: colorScheme.primary.withAlpha(25),
                     ),
                   ) ??
-                  Theme.of(context).inputDecorationTheme.disabledBorder ??
+                  theme.inputDecorationTheme.disabledBorder ??
                   OutlineInputBorder(
                     borderRadius: borderRadius,
                     borderSide: BorderSide(
                       width: widget.borderWidth ??
-                          Theme.of(context)
-                              .inputDecorationTheme
-                              .disabledBorder
-                              ?.borderSide
+                          theme.inputDecorationTheme.disabledBorder?.borderSide
                               .width ??
                           2,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary
-                          .withOpacity(0.1),
+                      color: colorScheme.primary.withAlpha(127),
                     ),
                   ),
             ),

@@ -35,6 +35,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
     this.contentPadding,
     this.autofillHints,
     this.suffixIcon,
+    this.showDetailError = false,
   }) : super(key: key);
 
   /// Whether the text field should automatically acquire focus when displayed.
@@ -105,6 +106,9 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   /// Optional widget to display after the text input.
   final Widget? suffixIcon;
 
+  /// Whether to show detailed error messages below the field.
+  final bool showDetailError;
+
   @override
   State<OnTextInputWidgetUserField> createState() =>
       _OnTextInputWidgetUserFieldState();
@@ -113,35 +117,29 @@ class OnTextInputWidgetUserField extends StatefulWidget {
 /// The state for the [OnTextInputWidgetUserField] widget.
 class _OnTextInputWidgetUserFieldState
     extends State<OnTextInputWidgetUserField> {
-  /// Current text value in the field
-  String s = '';
+  String _string = '';
 
-  /// Whether the field is currently in an error state
-  bool errorStatus = false;
+  bool _errorStatus = false;
 
-  /// Whether to show the text (for password fields)
-  bool showText = true;
+  bool _showText = true;
 
   @override
   void initState() {
     super.initState();
-    s = widget.textEditingController?.text ?? '';
-    showText = !widget.obscureText;
+    _string = widget.textEditingController?.text ?? '';
+    _showText = !widget.obscureText;
   }
 
-  /// Determines the suffix icon to display
-  /// For password fields, shows a toggle icon
-  /// For other fields, uses the provided suffix icon
-  Widget? setSuffixIcon() {
+  Widget? _setSuffixIcon() {
     if (widget.suffixIcon != null) return widget.suffixIcon;
 
     if (widget.obscureText) {
-      return s.isEmpty
+      return _string.isEmpty
           ? null
           : GestureDetector(
-              onTap: () => setState(() => showText = !showText),
+              onTap: () => setState(() => _showText = !_showText),
               child: _SVG(
-                showText
+                _showText
                     ? 'packages/on_text_input_widget/assets/svg/eye_opened_icon.svg'
                     : 'packages/on_text_input_widget/assets/svg/eye_closed_icon.svg',
                 color: Theme.of(context).colorScheme.primary,
@@ -166,24 +164,25 @@ class _OnTextInputWidgetUserFieldState
       initialValue: widget.initialValue,
       hintText: widget.hintText,
       keyboardType: widget.keyboardType,
-      obscureText: !showText,
+      obscureText: !_showText,
       maxLines: widget.maxLine,
       minLines: widget.minLine,
       boxConstraints: widget.boxConstraints,
+      showDetailError: widget.showDetailError,
       onFocusChange: (bool isFocused) => <void>{
-        if (widget.obscureText && !isFocused) setState(() => showText = false),
+        if (widget.obscureText && !isFocused) setState(() => _showText = false),
       },
-      suffixIcon: setSuffixIcon(),
+      suffixIcon: _setSuffixIcon(),
       validator: widget.validator,
       errorCheck: (bool error, String message) {
         setState(() {
-          s = '';
-          errorStatus = error;
+          _string = '';
+          _errorStatus = error;
         });
       },
       onChanged: (String value) {
         setState(() {
-          s = value;
+          _string = value;
         });
         if (widget.onChanged != null) widget.onChanged!(value.trim());
       },
@@ -206,13 +205,13 @@ class _OnTextInputWidgetUserFieldState
                     width: Theme.of(context).buttonTheme.height / 1.5,
                     child: _SVG(
                       widget.svg,
-                      color: errorStatus
+                      color: _errorStatus
                           ? Theme.of(context).colorScheme.error
-                          : s.isEmpty
+                          : _string.isEmpty
                               ? Theme.of(context)
                                   .colorScheme
                                   .primary
-                                  .withOpacity(0.5)
+                                  .withAlpha(127)
                               : Theme.of(context).colorScheme.primary,
                     ),
                   ),

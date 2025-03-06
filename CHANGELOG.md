@@ -13,3 +13,7 @@
 ## 0.0.4
 
 - OnTextInputWidgetUserField added. It is a sub-widget implemented with OnProcessButtonWidget
+
+## 0.0.5
+
+- Refactored - showDetailError added to the OnTextInputWidgetUserField
