@@ -299,7 +299,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     textEditingController =
         widget.textEditingController ?? TextEditingController();
     hintText = widget.hintText;
-    borderRadius = widget.borderRadius ?? BorderRadius.circular(8);
+    borderRadius = widget.borderRadius ?? _defaultBorderRadius;
 
     if (widget.initialValue != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -343,13 +343,12 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   Widget? _setIcon(Widget? icon) {
     if (icon == null) return null;
 
-    return SizedBox(
-      height: Theme.of(context).buttonTheme.height,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[icon],
-      ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        Flexible(child: icon),
+      ],
     );
   }
 
@@ -421,8 +420,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     final TextTheme textTheme = theme.textTheme;
 
     height = widget.boxConstraints?.minHeight ?? theme.buttonTheme.height;
-    contentPadding = widget.contentPadding ??
-        const EdgeInsets.symmetric(horizontal: 8, vertical: 4);
+    contentPadding = widget.contentPadding ?? _defaultContentPadding;
 
     return Column(
       mainAxisSize: MainAxisSize.min,

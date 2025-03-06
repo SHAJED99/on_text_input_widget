@@ -30,7 +30,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
     this.readOnly = false,
     this.border,
     this.isCollapsed = false,
-    this.isDense = false,
+    this.isDense = true,
     this.boxConstraints,
     this.contentPadding,
     this.autofillHints,
@@ -138,16 +138,29 @@ class _OnTextInputWidgetUserFieldState
           ? null
           : GestureDetector(
               onTap: () => setState(() => _showText = !_showText),
-              child: _SVG(
-                _showText
-                    ? 'packages/on_text_input_widget/assets/svg/eye_opened_icon.svg'
-                    : 'packages/on_text_input_widget/assets/svg/eye_closed_icon.svg',
-                color: Theme.of(context).colorScheme.primary,
+              child: _sized(
+                child: _SVG(
+                  _showText
+                      ? 'packages/on_text_input_widget/assets/svg/eye_opened_icon.svg'
+                      : 'packages/on_text_input_widget/assets/svg/eye_closed_icon.svg',
+                  color: Theme.of(context).colorScheme.primary,
+                ),
               ),
             );
     }
 
     return null;
+  }
+
+  Widget _sized({required Widget child}) {
+    final double h = Theme.of(context).buttonTheme.height;
+    return Container(
+      constraints: BoxConstraints(
+        maxWidth: h / 2,
+        maxHeight: h / 2,
+      ),
+      child: child,
+    );
   }
 
   @override
@@ -200,9 +213,7 @@ class _OnTextInputWidgetUserFieldState
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 if (widget.svg.isNotEmpty)
-                  SizedBox(
-                    height: Theme.of(context).buttonTheme.height / 1.5,
-                    width: Theme.of(context).buttonTheme.height / 1.5,
+                  _sized(
                     child: _SVG(
                       widget.svg,
                       color: _errorStatus
