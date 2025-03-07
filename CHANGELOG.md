@@ -17,8 +17,11 @@
 ## 0.0.5
 
 - Refactored - showDetailError added to the OnTextInputWidgetUserField
--
 
 ## 0.0.6
+
+- Refactored - Size
+
+## 0.0.7
 
 - Refactored - Size

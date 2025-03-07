@@ -3,6 +3,7 @@ library on_text_input_widget;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 part 'src/components.dart';

@@ -75,6 +75,7 @@ class OnTextInputWidget extends StatefulWidget {
     this.animationCurve = Curves.linear,
     this.clipBehavior = Clip.antiAlias,
     this.borderWidth,
+    this.inputFormatters,
   }) : super(key: key);
 
   /// A controller for an editable text field.
@@ -180,7 +181,7 @@ class OnTextInputWidget extends StatefulWidget {
   /// Hints for autofill functionality.
   final List<String>? autofillHints;
 
-  /// Text style for the input.
+  /// Text style for the input. Default: textTheme.titleMedium
   final TextStyle? style;
 
   /// Whether the field uses less vertical space.
@@ -272,6 +273,17 @@ class OnTextInputWidget extends StatefulWidget {
 
   /// Custom builder for error messages.
   final Widget Function(String message)? errorBuilder;
+
+  /// Creates a [FormField] that contains a [TextField].
+  ///
+  /// When a controller is specified, [initialValue] must be null (the default).
+  /// If controller is null, then a [TextEditingController] will be constructed
+  /// automatically and its text will be initialized to [initialValue] or the
+  /// empty string.
+  ///
+  /// For documentation about the various parameters, see the [TextField] class
+  /// and [TextField.new], the constructor.
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   State<OnTextInputWidget> createState() => _OnTextInputWidgetState();
@@ -449,11 +461,13 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             readOnly: widget.readOnly,
             cursorColor: widget.cursorColor ?? colorScheme.primary,
             autofillHints: widget.autofillHints,
+            inputFormatters: widget.inputFormatters,
             style: widget.style ??
                 textTheme.titleMedium?.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                  height: 1,
+                  // height: 1,
+                  decorationThickness: 0,
                 ),
 
             // -----------------------------------------------------------------
