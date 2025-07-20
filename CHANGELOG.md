@@ -25,3 +25,7 @@
 ## 0.0.7
 
 - Refactored - Size
+
+## 0.0.8
+
+- Border Color added

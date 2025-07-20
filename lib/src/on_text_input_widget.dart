@@ -76,6 +76,11 @@ class OnTextInputWidget extends StatefulWidget {
     this.clipBehavior = Clip.antiAlias,
     this.borderWidth,
     this.inputFormatters,
+    this.enabledBorderColor,
+    this.focusedBorderColor,
+    this.errorBorderColor,
+    this.focusedErrorBorderColor,
+    this.disabledBorderColor,
   }) : super(key: key);
 
   /// A controller for an editable text field.
@@ -232,17 +237,33 @@ class OnTextInputWidget extends StatefulWidget {
   /// Border style when the field is enabled.
   final InputBorder? enabledBorder;
 
+  /// Border color when the field is enabled
+  final Color? enabledBorderColor;
+
   /// Border style when the field is focused.
   final InputBorder? focusedBorder;
+
+  /// Border color when the field is focused.
+  final Color? focusedBorderColor;
 
   /// Border style when the field has an error.
   final InputBorder? errorBorder;
 
+  /// Border color when the field has an error.
+  final Color? errorBorderColor;
+
   /// Border style when the field has an error and is focused.
+
   final InputBorder? focusedErrorBorder;
+
+  /// Border color when the field has an error and is focused.
+  final Color? focusedErrorBorderColor;
 
   /// Border style when the field is disabled.
   final InputBorder? disabledBorder;
+
+  /// Border color when the field is disabled.
+  final Color? disabledBorderColor;
 
   /// Width of the border.
   final double? borderWidth;
@@ -628,7 +649,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.enabledBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary.withAlpha(127),
+                      color: widget.enabledBorderColor ??
+                          colorScheme.primary.withAlpha(127),
                     ),
                   ) ??
                   theme.inputDecorationTheme.enabledBorder ??
@@ -639,7 +661,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.enabledBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary.withAlpha(127),
+                      color: widget.enabledBorderColor ??
+                          colorScheme.primary.withAlpha(127),
                     ),
                   ),
               focusedBorder: widget.focusedBorder?.copyWith(
@@ -648,7 +671,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.focusedBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary,
+                      color: widget.focusedBorderColor ?? colorScheme.primary,
                     ),
                   ) ??
                   theme.inputDecorationTheme.focusedBorder ??
@@ -659,7 +682,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.focusedBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary,
+                      color: widget.focusedBorderColor ?? colorScheme.primary,
                     ),
                   ),
               errorBorder: widget.errorBorder?.copyWith(
@@ -668,7 +691,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.errorBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.error,
+                      color: widget.errorBorderColor ?? colorScheme.error,
                     ),
                   ) ??
                   theme.inputDecorationTheme.errorBorder ??
@@ -679,7 +702,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.errorBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.error,
+                      color: widget.errorBorderColor ?? colorScheme.error,
                     ),
                   ),
               focusedErrorBorder: widget.focusedErrorBorder?.copyWith(
@@ -688,7 +711,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.focusedErrorBorder
                               ?.borderSide.width ??
                           2,
-                      color: colorScheme.primary.withAlpha(127),
+                      color: widget.focusedErrorBorderColor ??
+                          colorScheme.primary.withAlpha(127),
                     ),
                   ) ??
                   theme.inputDecorationTheme.focusedBorder ??
@@ -699,7 +723,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.focusedErrorBorder
                               ?.borderSide.width ??
                           2,
-                      color: colorScheme.primary.withAlpha(127),
+                      color: widget.focusedErrorBorderColor ??
+                          colorScheme.primary.withAlpha(127),
                     ),
                   ),
               disabledBorder: widget.disabledBorder?.copyWith(
@@ -708,7 +733,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.disabledBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary.withAlpha(25),
+                      color: widget.disabledBorderColor ??
+                          colorScheme.primary.withAlpha(25),
                     ),
                   ) ??
                   theme.inputDecorationTheme.disabledBorder ??
@@ -719,7 +745,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                           theme.inputDecorationTheme.disabledBorder?.borderSide
                               .width ??
                           2,
-                      color: colorScheme.primary.withAlpha(127),
+                      color: widget.disabledBorderColor ??
+                          colorScheme.primary.withAlpha(127),
                     ),
                   ),
             ),
