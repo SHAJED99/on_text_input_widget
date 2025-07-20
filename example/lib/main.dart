@@ -142,6 +142,7 @@ class __OnChangedProcessingState extends State<__OnChangedProcessing> {
       result: result,
       child: OnTextInputWidget(
         hintText: "Search",
+        maxLength: 10,
         prefixIcon: Icon(Icons.search),
         showPrefixLoadingIcon: true,
         // showSuffixLoadingIcon: true,
