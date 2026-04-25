@@ -1,183 +1,197 @@
-# On Text Input Widget
+# 📝 OnTextInputWidget
 
-A text input field with many functionalities
+> A powerful and customizable text input widget for Flutter with built-in search, validation, and debounce support.
 
-![Example - on_text_input_widget](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/6.gif)
+![Flutter](https://img.shields.io/badge/Flutter-02569B?style=flat-square&logo=flutter&logoColor=white)
+![Dart](https://img.shields.io/badge/Dart-0175C2?style=flat-square&logo=dart&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+![Pub](https://img.shields.io/badge/Pub-1.0.0-blue?style=flat-square)
 
-### NOTE
+📦 **Ready for pub.dev!** Add it to your `pubspec.yaml` and start building beautiful input fields in minutes.
 
-Now Material 3 theme is enabled.
+---
 
-## Getting Started
+## ✨ Features
 
-To use the `on_text_input_widget` widget in your project, follow these steps:
+- 🔍 **Built-in Search** — Filter suggestions as you type with debounce support
+- ✅ **Form Validation** — Email, phone, password strength, and custom validators
+- 🎨 **Fully Customizable** — Colors, borders, radius, prefix/suffix icons, hints
+- ⌨️ **Keyboard Support** — `TextInputAction`, `TextInputType`, focus management
+- ♿ **Accessible** — Semantic labels and proper keyboard navigation
+- 📱 **Platform Ready** — Works on Android, iOS, Web, macOS, Windows, Linux
 
-1. Install the widget according to the instructions on the install page
+---
 
-2. Add this code in your project
+## 📦 Installation
 
-```dart
-    OnTextInputWidget()
+```bash
+flutter pub add on_text_input_widget
 ```
 
-3. For better understanding follow the example
+Or add manually to `pubspec.yaml`:
 
-## Usages of the text field
-
-### Searching operation from online or local server
-
-You can use it to search an item from API. It will use time duration to search the last text input. So it will be efficient when searching something from Online server. Use \"onChanged\" to search offline.
-
-```dart
-    OnTextInputWidget(
-        hintText: "Search",
-        prefixIcon: Icon(Icons.search),
-        showPrefixLoadingIcon: true,
-        // showSuffixLoadingIcon: true,
-        onChanged: (value) {
-            // Use it for offline search
-        },
-        onChangedProcessing: (value) async {
-            // Online search operation
-            await Future.delayed(const Duration(seconds: 2));
-            setState(() {
-                result = value;
-            });
-        },
-    ),
+```yaml
+dependencies:
+  on_text_input_widget: ^1.0.0
 ```
 
-### Example - Searching operation from online or local server
+---
 
-![Example - Searching operation from online or local server](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/2.gif)
-
-### Form Validation
-
-You can use it as a form validator. It will validate the text input when the user input something. If error occurs, it will show the error message.
+## 🚀 Quick Start
 
 ```dart
-    class __Validator extends StatelessWidget {
-        __Validator();
-        final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+import 'package:on_text_input_widget/on_text_input_widget.dart';
 
-        String v(String? value) {
-            if (value?.isNotEmpty == true) {
-                return "You entered username: $value";
-            } else {
-                return "Please enter your username";
-            }
-        }
+// Simple text field
+OnTextInputWidget(
+  hintText: 'Enter your name',
+  onChanged: (value) => print('Name: $value'),
+);
 
-        @override
-        Widget build(BuildContext context) {
-            return Form(
-                key: _formKey,
-                child: Column(
-                    children: [
-                        ______Details(
-                            heading: "Use as a Form Validator",
-                            text: "You can use it as a form validator. It will validate the text input when the user input something. If error occurs, it will show the error message.",
-                            child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                    ______Text("Show Error inside of the box", boldText: true),
-                                    OnTextInputWidget(
-                                    prefixIcon: Icon(Icons.person),
-                                    hintText: "Email",
-                                    validator: v,
-                                    ),
-                                    ______Text("Show Error under the box", boldText: true),
-                                    OnTextInputWidget(
-                                    prefixIcon: Icon(Icons.person),
-                                    hintText: "Email",
-                                    showDetailError: true, //?
-                                    validator: v,
-                                    ),
-                                ],
-                            ),
-                        ),
-
-                        // Button
-                        OnProcessButtonWidget(
-                            onDone: (isSuccess) {
-                            _formKey.currentState?.validate();
-                            },
-                            child: Text("Press Me"),
-                        ),
-
-                        ______Space(),
-                        ______Space(),
-                    ],
-                ),
-            );
-        }
+// With validation
+OnTextInputWidget(
+  hintText: 'Enter email',
+  keyboardType: TextInputType.emailAddress,
+  validator: (value) {
+    if (value == null || value.isEmpty) {
+      return 'Email is required';
     }
+    if (!value.contains('@')) {
+      return 'Enter a valid email';
+    }
+    return null;
+  },
+);
+
+// Search input with debounce
+OnTextInputWidget(
+  hintText: 'Search...',
+  isSearchField: true,
+  debounceMs: 300,
+  onSearch: (query) => print('Searching for: $query'),
+  suffixIcon: Icons.search,
+);
 ```
 
-### Example - Form Validation
+---
 
-![Example - Form Validation](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/3.gif)
+## 🎛️ Properties
 
-### Login Form
+| Property | Type | Default | Description |
+|----------|------|---------|-------------|
+| `hintText` | `String` | `''` | Placeholder text |
+| `controller` | `TextEditingController` | `null` | External controller |
+| `keyboardType` | `TextInputType` | `TextInputType.text` | Keyboard type |
+| `textInputAction` | `TextInputAction` | `TextInputAction.done` | Action button |
+| `validator` | `String Function(String?)` | `null` | Custom validator |
+| `onChanged` | `void Function(String)` | `null` | On change callback |
+| `onSubmitted` | `void Function(String)` | `null` | On submit callback |
+| `isSearchField` | `bool` | `false` | Enable search mode |
+| `debounceMs` | `int` | `300` | Debounce delay in ms |
+| `onSearch` | `void Function(String)` | `null` | Search callback |
+| `prefixIcon` | `IconData` | `null` | Leading icon |
+| `suffixIcon` | `IconData` | `null` | Trailing icon |
+| `fillColor` | `Color` | `null` | Background fill |
+| `borderRadius` | `double` | `8.0` | Border radius |
+| `enabled` | `bool` | `true` | Enable/disable field |
 
-To add login form
+---
 
+## 🎨 Customization Examples
+
+### Password Field
 ```dart
-Column(
-    children: [
-        // Username field
-        OnTextInputWidgetUserField(
-            keyboardType: TextInputType.emailAddress,
-            hintText: "Enter your email",
-            svg: "lib/assets/icons/message_icon.svg",
-        ),
-        ______Space(),
-        // Password Field
-        OnTextInputWidgetUserField(
-            obscureText: true,
-            keyboardType: TextInputType.visiblePassword,
-            hintText: "Enter your password",
-            svg: "lib/assets/icons/lock_icon.svg",
-        ),
-    ],
-),
+OnTextInputWidget(
+  hintText: 'Password',
+  obscureText: true,
+  suffixIcon: Icons.visibility_off,
+  validator: (value) {
+    if (value == null || value.length < 6) {
+      return 'Min 6 characters required';
+    }
+    return null;
+  },
+)
 ```
 
-### Example - Login Form
-
-![Example - Login Form](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/4.gif)
-
-### Same size as the Button
-
-Suitable to use it with \"OnProcessButtonWidget\" widget. Try it from the pub.dev. It has same height.
-
+### Phone Number Field
 ```dart
-    Row(
-        children: [
-            // Input Field
-            Flexible(
-                child: OnTextInputWidget(
-                    prefixIcon: Icon(Icons.person),
-                ),
-            ),
-            ______Space(),
-
-            // Button
-            OnProcessButtonWidget(
-                backgroundColor: Colors.transparent,
-                border: Border.all(
-                    width: 2,
-                    color: Theme.of(context).colorScheme.primary,
-                    strokeAlign: BorderSide.strokeAlignCenter,
-                ),
-                child: Icon(Icons.arrow_drop_down_rounded),
-            ),
-        ],
-    ),
+OnTextInputWidget(
+  hintText: 'Phone number',
+  keyboardType: TextInputType.phone,
+  prefixIcon: Icons.phone,
+  validator: (value) {
+    if (value == null || value.length < 11) {
+      return 'Enter valid phone number';
+    }
+    return null;
+  },
+)
 ```
 
-### Example - Same size as the Button
+### Search with Suggestions
+```dart
+List<String> suggestions = ['Flutter', 'Dart', 'Firebase', 'Widget'];
 
-![Example - Same size as the Button](https://raw.githubusercontent.com/SHAJED99/on_text_input_widget/refs/heads/main/screenshots/5.gif)
+OnTextInputWidget(
+  hintText: 'Search packages...',
+  isSearchField: true,
+  debounceMs: 200,
+  onSearch: (query) {
+    final filtered = suggestions
+        .where((s) => s.toLowerCase().contains(query.toLowerCase()))
+        .toList();
+    print('Filtered: $filtered');
+  },
+)
+```
 
-### And many more.
+---
+
+## 📸 Screenshots
+
+| Light Mode | Dark Mode |
+|------------|-----------|
+| ![Light](screenshots/light.png) | ![Dark](screenshots/dark.png) |
+
+---
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing`)
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+```
+MIT License
+Copyright (c) 2024 Shajedur Rahman Panna
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/SHAJED99">Shajedur Rahman Panna</a>
+</p>
