@@ -98,7 +98,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   final BoxConstraints? boxConstraints;
 
   /// Padding within the text field.
-  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsets? contentPadding;
 
   /// List of autofill hints for the keyboard.
   final List<String>? autofillHints;

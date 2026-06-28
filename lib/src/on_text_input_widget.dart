@@ -151,7 +151,7 @@ class OnTextInputWidget extends StatefulWidget {
   final Color? loadingIconColor;
 
   /// Padding within the text field.
-  final EdgeInsetsGeometry? contentPadding;
+  final EdgeInsets? contentPadding;
 
   /// Size constraints for the text field.
   final BoxConstraints? boxConstraints;
@@ -320,7 +320,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   bool isIdle = true;
   bool error = false;
   String? message;
-  late EdgeInsetsGeometry contentPadding;
+  late EdgeInsets contentPadding;
   late double height;
 
   late TextEditingController textEditingController;
@@ -417,7 +417,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     );
   }
 
-  Widget? widgetReplacement(Widget? wez, EdgeInsetsGeometry padding) {
+  Widget? widgetReplacement(Widget? wez, EdgeInsets padding) {
     if (wez == null) return SizedBox(width: padding.horizontal);
 
     return Container(
