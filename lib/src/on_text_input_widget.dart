@@ -472,7 +472,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     final ColorScheme colorScheme = theme.colorScheme;
     final TextTheme textTheme = theme.textTheme;
 
-    height = widget.boxConstraints?.minHeight ?? _defaultHeight;
+    height = widget.boxConstraints?.minHeight ?? theme.buttonTheme.height;
     contentPadding = widget.contentPadding ?? _defaultContentPadding;
 
     return Column(
