@@ -119,8 +119,6 @@ class _OnTextInputWidgetUserFieldState
     extends State<OnTextInputWidgetUserField> {
   String _string = '';
 
-  bool _errorStatus = false;
-
   bool _showText = true;
 
   @override
@@ -128,6 +126,17 @@ class _OnTextInputWidgetUserFieldState
     super.initState();
     _string = widget.textEditingController?.text ?? '';
     _showText = !widget.obscureText;
+  }
+
+  @override
+  void didUpdateWidget(OnTextInputWidgetUserField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.textEditingController != oldWidget.textEditingController) {
+      _string = widget.textEditingController?.text ?? '';
+    }
+    if (widget.obscureText != oldWidget.obscureText) {
+      _showText = !widget.obscureText;
+    }
   }
 
   Widget? _setSuffixIcon() {
@@ -153,9 +162,9 @@ class _OnTextInputWidgetUserFieldState
   }
 
   Widget _sized({required Widget child}) {
-    final double h = Theme.of(context).buttonTheme.height;
+    const double h = _defaultHeight;
     return Container(
-      constraints: BoxConstraints(
+      constraints: const BoxConstraints(
         maxWidth: h / 2,
         maxHeight: h / 2,
       ),
@@ -182,22 +191,23 @@ class _OnTextInputWidgetUserFieldState
       minLines: widget.minLine,
       boxConstraints: widget.boxConstraints,
       showDetailError: widget.showDetailError,
-      onFocusChange: (bool isFocused) => <void>{
-        if (widget.obscureText && !isFocused) setState(() => _showText = false),
+      onFocusChange: (bool isFocused) {
+        if (widget.obscureText && !isFocused) setState(() => _showText = false);
       },
       suffixIcon: _setSuffixIcon(),
       validator: widget.validator,
       errorCheck: (bool error, String message) {
-        setState(() {
-          _string = '';
-          _errorStatus = error;
-        });
+        if (error) {
+          setState(() {
+            _string = '';
+          });
+        }
       },
       onChanged: (String value) {
         setState(() {
           _string = value;
         });
-        if (widget.onChanged != null) widget.onChanged!(value.trim());
+        if (widget.onChanged != null) widget.onChanged!(value);
       },
       errorBorder: widget.border,
       enabledBorder: widget.border,
@@ -216,14 +226,12 @@ class _OnTextInputWidgetUserFieldState
                   _sized(
                     child: _SVG(
                       widget.svg,
-                      color: _errorStatus
-                          ? Theme.of(context).colorScheme.error
-                          : _string.isEmpty
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .primary
-                                  .withAlpha(127)
-                              : Theme.of(context).colorScheme.primary,
+                      color: _string.isEmpty
+                            ? Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withAlpha(127)
+                            : Theme.of(context).colorScheme.primary,
                     ),
                   ),
                 if (widget.svg.isNotEmpty && widget.prefixChild != null)

@@ -27,7 +27,7 @@ class OnTextInputWidget extends StatefulWidget {
     this.onComplete,
     this.onTapOutside,
     this.onChanged,
-    this.onChangeDebouncer = const Duration(milliseconds: 1000),
+    this.onChangeDebounce = const Duration(milliseconds: 1000),
     this.onChangedProcessing,
     this.errorCheck,
     this.fullTextSelection = false,
@@ -133,7 +133,7 @@ class OnTextInputWidget extends StatefulWidget {
   final TextCapitalization textCapitalization;
 
   /// Debounce duration for processing text changes.
-  final Duration onChangeDebouncer;
+  final Duration onChangeDebounce;
 
   /// Whether to select all text when the field is tapped.
   final bool fullTextSelection;
@@ -313,7 +313,7 @@ class OnTextInputWidget extends StatefulWidget {
 class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   bool isFocused = false;
   late BorderRadius borderRadius;
-  Offset? focusNode;
+  Offset? focusOffset;
   bool firstTimeTap = false;
   Timer? debounce;
   List<String> searchProductList = <String>[];
@@ -325,27 +325,59 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
   late TextEditingController textEditingController;
   late String hintText;
+  bool _controllerIsInternal = false;
 
   @override
   void initState() {
     super.initState();
-    textEditingController =
-        widget.textEditingController ?? TextEditingController();
+    if (widget.textEditingController == null) {
+      textEditingController = TextEditingController();
+      _controllerIsInternal = true;
+    } else {
+      textEditingController = widget.textEditingController!;
+    }
     hintText = widget.hintText;
     borderRadius = widget.borderRadius ?? _defaultBorderRadius;
 
     if (widget.initialValue != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        textEditingController.text = widget.initialValue!;
+        if (mounted) {
+          textEditingController.text = widget.initialValue!;
+        }
       });
     }
   }
 
   @override
+  void didUpdateWidget(OnTextInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.textEditingController != oldWidget.textEditingController) {
+      if (_controllerIsInternal) {
+        textEditingController.dispose();
+      }
+      if (widget.textEditingController == null) {
+        textEditingController = TextEditingController();
+        _controllerIsInternal = true;
+      } else {
+        textEditingController = widget.textEditingController!;
+        _controllerIsInternal = false;
+      }
+    }
+    if (widget.hintText != oldWidget.hintText && !error) {
+      hintText = widget.hintText;
+    }
+    if (widget.borderRadius != oldWidget.borderRadius) {
+      borderRadius = widget.borderRadius ?? _defaultBorderRadius;
+    }
+  }
+
+  @override
   void dispose() {
-    super.dispose();
-    // textEditingController.dispose();
+    if (_controllerIsInternal) {
+      textEditingController.dispose();
+    }
     debounce?.cancel();
+    super.dispose();
   }
 
   Widget? showLoadingIcon(bool value) {
@@ -386,17 +418,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   }
 
   Widget? widgetReplacement(Widget? wez, EdgeInsetsGeometry padding) {
-    // print(contentPadding.horizontal);
-
     if (wez == null) return SizedBox(width: padding.horizontal);
 
-    // widget.boxConstraints.minWidth ??
-    // BoxConstraints(minWidth: Theme.of(context).buttonTheme.height),
-
     return Container(
-      // const BoxConstraints(minWidth: 16)
-      // (widget.boxConstraints?.minWidth ??
-      // color: Colors.amber,
       margin: EdgeInsets.symmetric(horizontal: padding.horizontal / 2),
       constraints: BoxConstraints(minWidth: padding.horizontal),
       child: wez,
@@ -431,19 +455,15 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
 
   void unfocusKeyboard() {
     try {
-      if (focusNode == FocusManager.instance.primaryFocus?.offset) {
+      if (focusOffset == FocusManager.instance.primaryFocus?.offset) {
         FocusManager.instance.primaryFocus?.unfocus();
         FocusManager.instance.rootScope.unfocus();
         FocusScope.of(context).unfocus();
-        focusNode = null;
+        focusOffset = null;
       } else {
-        focusNode = FocusManager.instance.primaryFocus?.offset;
+        focusOffset = FocusManager.instance.primaryFocus?.offset;
       }
     } catch (_) {}
-
-    // FocusManager.instance.primaryFocus?.unfocus();
-    // FocusManager.instance.rootScope.unfocus();
-    // FocusScope.of(context).unfocus();
   }
 
   @override
@@ -452,7 +472,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     final ColorScheme colorScheme = theme.colorScheme;
     final TextTheme textTheme = theme.textTheme;
 
-    height = widget.boxConstraints?.minHeight ?? theme.buttonTheme.height;
+    height = widget.boxConstraints?.minHeight ?? _defaultHeight;
     contentPadding = widget.contentPadding ?? _defaultContentPadding;
 
     return Column(
@@ -460,7 +480,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
       children: <Widget>[
         Focus(
           onFocusChange: (bool value) {
-            if (value) focusNode = FocusManager.instance.primaryFocus?.offset;
+            if (value) focusOffset = FocusManager.instance.primaryFocus?.offset;
             firstTimeTap = false;
             if (!value) {
               unfocusKeyboard();
@@ -487,7 +507,6 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 textTheme.titleMedium?.copyWith(
                   color: colorScheme.primary,
                   fontWeight: FontWeight.bold,
-                  // height: 1,
                   decorationThickness: 0,
                 ),
 
@@ -526,13 +545,15 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 if (debounce?.isActive ?? false) debounce?.cancel();
                 searchProductList.add(value);
                 debounce = Timer(
-                  widget.onChangeDebouncer,
+                  widget.onChangeDebounce,
                   () async {
                     while (isIdle && searchProductList.isNotEmpty) {
                       String searchingProduct = searchProductList.last;
                       searchProductList = <String>[];
                       if (mounted) setState(() => isIdle = false);
-                      await widget.onChangedProcessing!(searchingProduct);
+                      try {
+                        await widget.onChangedProcessing!(searchingProduct);
+                      } catch (_) {}
                       if (mounted) setState(() => isIdle = true);
                     }
                   },
@@ -545,7 +566,6 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               if (mounted) setState(() {});
             },
             onTap: () {
-              // focusNode = FocusManager.instance.primaryFocus?.offset;
               if (widget.fullTextSelection && !firstTimeTap) {
                 textEditingController.selection = TextSelection(
                   baseOffset: 0,
@@ -580,7 +600,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               }
 
               if (mounted) setState(() {});
-              return '';
+              return null;
             },
             decoration: InputDecoration(
               isDense: widget.isDense,
@@ -638,10 +658,6 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                       ) ??
                       TextStyle(color: colorScheme.error),
               errorStyle: const TextStyle(fontSize: 0),
-              // errorMaxLines: 1,
-              // error: const SizedBox(),
-              // errorText: "",
-
               contentPadding: contentPadding,
               enabledBorder: widget.enabledBorder?.copyWith(
                     borderSide: BorderSide(

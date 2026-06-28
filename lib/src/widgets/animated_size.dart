@@ -22,7 +22,7 @@ class _CustomAnimatedSize extends StatelessWidget {
     return FractionallySizedBox(
       widthFactor: widthFactor,
       child: AnimatedSize(
-        curve: Curves.easeInOut,
+        curve: curve,
         clipBehavior: clipBehavior,
         alignment: alignment,
         duration: duration,
