@@ -6,8 +6,10 @@
 
 ## Further Reading
 
-- `doc/using-on-text-input-widget.md` — how to *use* the two public widgets
-  (debounce pipeline, error modes and their traps, controller ownership, styling).
+- `.claude/skills/on-text-input-widget/SKILL.md` — loadable skill covering how
+  to *use* the two public widgets, including a 0.2.0 migration table.
+- `doc/using-on-text-input-widget.md` — the same material as prose, and what
+  ships in the published package (`.claude/` does not).
 - `doc/audit-2026-09-16.md` — known bugs and accessibility gaps, deliberately
   unfixed, with rationale.
 
