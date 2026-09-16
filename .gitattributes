@@ -1,2 +1,5 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Auto detect text files and normalise to LF in the index and the working
+# tree. Without the explicit eol, core.autocrlf=true checks these out as CRLF
+# on Windows while Flutter regenerates them as LF, leaving generated files
+# under example/ permanently reported as modified.
+* text=auto eol=lf
