@@ -15,7 +15,7 @@ The floor is set by `flutter_svg`, not by any API used directly here.
 
 ```yaml
 dependencies:
-  on_text_input_widget: ^0.3.0
+  on_text_input_widget: ^0.2.0
 ```
 
 Then import:
@@ -59,7 +59,7 @@ OnTextInputWidget(
 )
 ```
 
-> **Gating a submit:** since 0.3.0 the validator's result reaches the enclosing
+> **Gating a submit:** since 0.2.0 the validator's result reaches the enclosing
 > `Form`, so `_formKey.currentState!.validate()` returns `false` on failure and
 > can be used to block submission. Earlier versions always returned `true`.
 

@@ -1,4 +1,4 @@
-## 0.3.0
+## 0.2.0
 
 ### Breaking — renames
 
@@ -41,7 +41,7 @@ The UserField names now match `OnTextInputWidget` and Flutter's own
 - Added regression tests for the `errorBuilder` and input-clearing fixes, and
   assertions that `FormState.validate()` now reflects validity (17 tests)
 
-## 0.2.0
+### Documentation and constraints
 
 - **Breaking**: Raised minimum Flutter to 3.27.0 and Dart SDK to 3.6.0.
   The previously declared pair (Flutter >=3.3.0 with Dart >=3.0.0) was

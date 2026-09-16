@@ -91,7 +91,7 @@ message stays visible while they correct it.
 
 `errorBuilder` works with or without `showDetailError`; setting either one moves
 the message out of the built-in error text and into your section below the
-field. (Before 0.3.0 the builder rendered nothing unless `showDetailError` was
+field. (Before 0.2.0 the builder rendered nothing unless `showDetailError` was
 also set, and the default mode cleared the input. See the CHANGELOG.)
 
 `onError` is a notification, not a check: it fires with `(true, message)` on
@@ -161,7 +161,7 @@ OnTextInputWidgetUserField(
 - **Loading icon is automatic**: supplying `onChangedProcessing` implicitly
   enables the prefix loading icon.
 
-Parameter names match `OnTextInputWidget` exactly (they diverged before 0.3.0 —
+Parameter names match `OnTextInputWidget` exactly (they diverged before 0.2.0 —
 see the CHANGELOG if migrating). UserField exposes a deliberately small subset;
 anything not in its constructor is unreachable, so use `OnTextInputWidget`
 directly.
@@ -218,7 +218,7 @@ an accessible form, compensate at the call site:
 - No `Semantics` is applied to `prefixIcon` / `suffixIcon` you supply; label
   them yourself if they convey meaning.
 
-Fixed in 0.3.0: the password toggle is now a labelled semantic button with a
+Fixed in 0.2.0: the password toggle is now a labelled semantic button with a
 48dp tap target, and error messages reach `InputDecoration.errorText`, which
 assistive technology announces.
 
@@ -233,7 +233,7 @@ assistive technology announces.
 | Error below the field | `showDetailError: true` |
 | Custom error widget | `errorBuilder` (with or without `showDetailError`) |
 | React to validation failure | `onError` |
-| Block a form submit | `FormState.validate()` — works normally since 0.3.0 |
+| Block a form submit | `FormState.validate()` — works normally since 0.2.0 |
 | Password field with toggle | `OnTextInputWidgetUserField(obscureText: true)` |
 | Per-state border styling | `OnTextInputWidget`, not UserField |
 | Field matching a button's height | Leave height default, or set `boxConstraints` |
