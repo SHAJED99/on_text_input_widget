@@ -35,7 +35,7 @@ OnTextInputWidget(
   hintText: 'Search',
   prefixIcon: const Icon(Icons.search),
   showPrefixLoadingIcon: true,
-  onChangeDebounce: const Duration(milliseconds: 500), // default: 1000ms
+  debounceDuration: const Duration(milliseconds: 500), // default: 1000ms
   onChangedProcessing: (String value) async {
     final List<Product> results = await api.search(value);
     setState(() => _results = results);
@@ -46,7 +46,7 @@ OnTextInputWidget(
 How it behaves:
 
 - Each keystroke cancels the pending timer and restarts it. The callback fires
-  once, `onChangeDebounce` after typing stops.
+  once, `debounceDuration` after typing stops.
 - While a call is in flight, further keystrokes queue; when it finishes, only the
   **most recent** value is processed. Intermediate values are dropped, not
   replayed. This is intentional — you want the latest query, not all of them.
@@ -79,24 +79,22 @@ OnTextInputWidget(
 )
 ```
 
-Three traps, in order of how likely you are to hit them:
+All three modes report failure to an enclosing `Form`, so
+`FormState.validate()` reflects validity and can gate a submit normally:
 
-1. **`errorBuilder` without `showDetailError: true` silently shows nothing.** The
-   builder is only consulted inside a branch guarded by `showDetailError`, but
-   supplying a builder also disables the Mode A fallback. Always pair them.
-2. **Mode A clears the field.** A failed validation calls `clear()` on the
-   controller — the user's text is gone, and the message (living in the hint) is
-   visible only while the field is empty, so it disappears as soon as they
-   retype. Prefer `showDetailError: true` for anything typed at length.
-3. **`Form.validate()` always returns `true`.** The internal validator returns
-   `null` on every path, including failure, so it cannot gate a submit. Call your
-   validation function directly if you need a real guard:
+```dart
+if (_formKey.currentState!.validate()) submit();
+```
 
-   ```dart
-   if (_validate(_controller.text) != null) return; // do not rely on _formKey
-   ```
+A failed validation never clears the field — the user's text survives, and the
+message stays visible while they correct it.
 
-`errorCheck` is a notification, not a check: it fires with `(true, message)` on
+`errorBuilder` works with or without `showDetailError`; setting either one moves
+the message out of the built-in error text and into your section below the
+field. (Before 0.3.0 the builder rendered nothing unless `showDetailError` was
+also set, and the default mode cleared the input. See the CHANGELOG.)
+
+`onError` is a notification, not a check: it fires with `(true, message)` on
 failure, and `(false, '')` when tapping the field clears an existing error. It
 does **not** fire on successful validation.
 
@@ -106,7 +104,7 @@ Unlike `TextFormField`, you may pass **both**. `initialValue` is written into th
 controller in a post-frame callback.
 
 ```dart
-OnTextInputWidget(textEditingController: _controller, initialValue: 'seed')
+OnTextInputWidget(controller: _controller, initialValue: 'seed')
 ```
 
 Ownership rules — get this wrong and you either leak or crash:
@@ -115,7 +113,7 @@ Ownership rules — get this wrong and you either leak or crash:
 - Pass your own: **you** dispose it. The widget will not.
 - Swap the controller at runtime: handled correctly in `didUpdateWidget`.
 
-Note the parameter is `textEditingController`, not `controller`.
+Note the parameter is `controller`, not `controller`.
 
 ### 1.4 Loading icons need `onChangedProcessing`
 
@@ -163,15 +161,10 @@ OnTextInputWidgetUserField(
 - **Loading icon is automatic**: supplying `onChangedProcessing` implicitly
   enables the prefix loading icon.
 
-**Parameter names differ from the base widget** — a known wart:
-
-| UserField | `OnTextInputWidget` |
-|---|---|
-| `maxLine` / `minLine` | `maxLines` / `minLines` |
-| `enable` | `enabled` |
-
-UserField exposes a deliberately small subset. Anything not in its constructor is
-unreachable — use `OnTextInputWidget` directly.
+Parameter names match `OnTextInputWidget` exactly (they diverged before 0.3.0 —
+see the CHANGELOG if migrating). UserField exposes a deliberately small subset;
+anything not in its constructor is unreachable, so use `OnTextInputWidget`
+directly.
 
 ---
 
@@ -218,13 +211,16 @@ tapping outside unfocuses (`onTapOutside` runs after the built-in unfocus).
 The package ships **no** `Semantics`, `semanticLabel` or `Tooltip` anywhere. For
 an accessible form, compensate at the call site:
 
-- The password toggle is an unlabelled `GestureDetector` at 24x24 — below the
-  48dp minimum target, and silent to screen readers.
-- Errors are conveyed by hint-text colour only, and `errorStyle` is forced to
-  `fontSize: 0`, so nothing reaches `InputDecoration.errorText` — the channel
-  assistive tech announces. Wrap in your own `Semantics` with `liveRegion` if
-  error announcement matters.
-- The default 36dp height is under the 48dp touch-target minimum.
+- The default field height is `theme.buttonTheme.height` (36dp), under the 48dp
+  touch-target minimum. This is deliberate — it aligns the field with
+  `on_process_button_widget` in a `Row`. Set
+  `boxConstraints: const BoxConstraints(minHeight: 48)` where that matters.
+- No `Semantics` is applied to `prefixIcon` / `suffixIcon` you supply; label
+  them yourself if they convey meaning.
+
+Fixed in 0.3.0: the password toggle is now a labelled semantic button with a
+48dp tap target, and error messages reach `InputDecoration.errorText`, which
+assistive technology announces.
 
 ---
 
@@ -233,11 +229,11 @@ an accessible form, compensate at the call site:
 | Want | Use |
 |---|---|
 | Immediate per-keystroke callback | `onChanged` |
-| Debounced async/server callback | `onChangedProcessing` + `onChangeDebounce` |
+| Debounced async/server callback | `onChangedProcessing` + `debounceDuration` |
 | Error below the field | `showDetailError: true` |
-| Custom error widget | `showDetailError: true` **and** `errorBuilder` |
-| React to validation failure | `errorCheck` |
-| Block a form submit | Call your validator directly — `Form.validate()` is unreliable |
+| Custom error widget | `errorBuilder` (with or without `showDetailError`) |
+| React to validation failure | `onError` |
+| Block a form submit | `FormState.validate()` — works normally since 0.3.0 |
 | Password field with toggle | `OnTextInputWidgetUserField(obscureText: true)` |
 | Per-state border styling | `OnTextInputWidget`, not UserField |
 | Field matching a button's height | Leave height default, or set `boxConstraints` |

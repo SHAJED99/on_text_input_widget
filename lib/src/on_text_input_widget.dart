@@ -10,8 +10,8 @@ class OnTextInputWidget extends StatefulWidget {
   /// This widget can be configured with numerous options to control
   /// its appearance and behavior.
   const OnTextInputWidget({
-    Key? key,
-    this.textEditingController,
+    super.key,
+    this.controller,
     this.hintText = '',
     this.obscureText = false,
     this.obscuringCharacter = '•',
@@ -27,9 +27,9 @@ class OnTextInputWidget extends StatefulWidget {
     this.onComplete,
     this.onTapOutside,
     this.onChanged,
-    this.onChangeDebounce = const Duration(milliseconds: 1000),
+    this.debounceDuration = const Duration(milliseconds: 1000),
     this.onChangedProcessing,
-    this.errorCheck,
+    this.onError,
     this.fullTextSelection = false,
     this.onTap,
     this.validator,
@@ -81,7 +81,7 @@ class OnTextInputWidget extends StatefulWidget {
     this.errorBorderColor,
     this.focusedErrorBorderColor,
     this.disabledBorderColor,
-  }) : super(key: key);
+  });
 
   /// A controller for an editable text field.
   ///
@@ -90,7 +90,7 @@ class OnTextInputWidget extends StatefulWidget {
   ///
   /// Unlike [TextFormField], this may be combined with [initialValue],
   /// which is written into the controller after the first frame.
-  final TextEditingController? textEditingController;
+  final TextEditingController? controller;
 
   /// Text that suggests what sort of input the field accepts.
   final String hintText;
@@ -135,7 +135,7 @@ class OnTextInputWidget extends StatefulWidget {
   final TextCapitalization textCapitalization;
 
   /// Debounce duration for processing text changes.
-  final Duration onChangeDebounce;
+  final Duration debounceDuration;
 
   /// Whether to select all text when the field is tapped.
   final bool fullTextSelection;
@@ -310,7 +310,7 @@ class OnTextInputWidget extends StatefulWidget {
   final void Function(String value)? onChanged;
 
   /// Async callback for processing text changes, debounced by
-  /// [onChangeDebounce]. Intended for server-backed search-as-you-type.
+  /// [debounceDuration]. Intended for server-backed search-as-you-type.
   ///
   /// Calls never overlap. Keystrokes arriving while a call is in flight are
   /// coalesced, and only the most recent value is processed once it
@@ -324,7 +324,7 @@ class OnTextInputWidget extends StatefulWidget {
   /// `(false, '')` when tapping the field clears an existing error.
   ///
   /// Not called on successful validation.
-  final void Function(bool error, String message)? errorCheck;
+  final void Function(bool error, String message)? onError;
 
   /// Custom builder for the error message shown below the field.
   ///
@@ -362,18 +362,18 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   late EdgeInsets contentPadding;
   late double height;
 
-  late TextEditingController textEditingController;
+  late TextEditingController _controller;
   late String hintText;
   bool _controllerIsInternal = false;
 
   @override
   void initState() {
     super.initState();
-    if (widget.textEditingController == null) {
-      textEditingController = TextEditingController();
+    if (widget.controller == null) {
+      _controller = TextEditingController();
       _controllerIsInternal = true;
     } else {
-      textEditingController = widget.textEditingController!;
+      _controller = widget.controller!;
     }
     hintText = widget.hintText;
     borderRadius = widget.borderRadius ?? _defaultBorderRadius;
@@ -381,7 +381,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     if (widget.initialValue != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) {
-          textEditingController.text = widget.initialValue!;
+          _controller.text = widget.initialValue!;
         }
       });
     }
@@ -390,15 +390,15 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   @override
   void didUpdateWidget(OnTextInputWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.textEditingController != oldWidget.textEditingController) {
+    if (widget.controller != oldWidget.controller) {
       if (_controllerIsInternal) {
-        textEditingController.dispose();
+        _controller.dispose();
       }
-      if (widget.textEditingController == null) {
-        textEditingController = TextEditingController();
+      if (widget.controller == null) {
+        _controller = TextEditingController();
         _controllerIsInternal = true;
       } else {
-        textEditingController = widget.textEditingController!;
+        _controller = widget.controller!;
         _controllerIsInternal = false;
       }
     }
@@ -413,7 +413,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
   @override
   void dispose() {
     if (_controllerIsInternal) {
-      textEditingController.dispose();
+      _controller.dispose();
     }
     debounce?.cancel();
     super.dispose();
@@ -444,6 +444,13 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     }
   }
 
+  /// Whether the error message is rendered by this widget below the field
+  /// (via [OnTextInputWidget.showDetailError] or
+  /// [OnTextInputWidget.errorBuilder]) rather than by the built-in
+  /// [InputDecoration.errorText].
+  bool get _usesCustomErrorDisplay =>
+      widget.showDetailError || widget.errorBuilder != null;
+
   Widget? _setIcon(Widget? icon) {
     if (icon == null) return null;
 
@@ -470,8 +477,12 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
     final TextTheme textTheme = theme.textTheme;
-    if (error && widget.showDetailError && message != null) {
-      return widget.errorBuilder != null
+    if (error && _usesCustomErrorDisplay && message != null) {
+      //* The built-in error text is still present (rendered at zero size) and
+      //* carries the message to assistive technology, so this visible copy is
+      //* excluded from semantics to avoid announcing it twice.
+      return ExcludeSemantics(
+        child: widget.errorBuilder != null
           ? widget.errorBuilder!(message ?? '')
           : Padding(
               padding: EdgeInsets.symmetric(
@@ -486,7 +497,8 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                       fontWeight: FontWeight.bold,
                     ),
               ),
-            );
+            ),
+      );
     } else {
       return const SizedBox();
     }
@@ -529,7 +541,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             if (widget.onFocusChange != null) widget.onFocusChange!(value);
           },
           child: TextFormField(
-            controller: textEditingController,
+            controller: _controller,
             obscureText: widget.obscureText,
             obscuringCharacter: widget.obscuringCharacter,
             focusNode: widget.focusNode,
@@ -566,7 +578,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             onEditingComplete: () {
               unfocusKeyboard();
               if (widget.onComplete != null) {
-                widget.onComplete!(textEditingController.text);
+                widget.onComplete!(_controller.text);
               }
             },
             onTapOutside: (PointerDownEvent pointerDownEvent) {
@@ -584,7 +596,7 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                 if (debounce?.isActive ?? false) debounce?.cancel();
                 searchProductList.add(value);
                 debounce = Timer(
-                  widget.onChangeDebounce,
+                  widget.debounceDuration,
                   () async {
                     while (isIdle && searchProductList.isNotEmpty) {
                       String searchingProduct = searchProductList.last;
@@ -606,9 +618,9 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
             },
             onTap: () {
               if (widget.fullTextSelection && !firstTimeTap) {
-                textEditingController.selection = TextSelection(
+                _controller.selection = TextSelection(
                   baseOffset: 0,
-                  extentOffset: textEditingController.value.text.length,
+                  extentOffset: _controller.value.text.length,
                 );
                 firstTimeTap = true;
               }
@@ -616,30 +628,32 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
               if (error) {
                 hintText = widget.hintText;
                 error = false;
-                if (widget.errorCheck != null) widget.errorCheck!(error, '');
+                if (widget.onError != null) widget.onError!(error, '');
               }
               if (mounted) setState(() {});
             },
             validator: (String? value) {
               message = null;
+              error = false;
               if (mounted) setState(() {});
 
               if (widget.validator == null) return null;
               message = widget.validator!(value);
-              if (message == null) return null;
+              if (message == null) {
+                if (mounted) setState(() {});
+                return null;
+              }
+
               error = true;
-              if (widget.errorCheck != null) {
-                widget.errorCheck!(error, message!);
+              if (widget.onError != null) {
+                widget.onError!(error, message!);
               }
-
-              if (widget.showDetailError || widget.errorBuilder != null) {
-              } else {
-                textEditingController.clear();
-                hintText = message!;
-              }
-
               if (mounted) setState(() {});
-              return null;
+
+              //* Reported to the enclosing Form so validate() can fail.
+              //* When a custom display is in use the built-in error text is
+              //* hidden via errorStyle, to avoid showing the message twice.
+              return message;
             },
             decoration: InputDecoration(
               isDense: widget.isDense,
@@ -696,7 +710,12 @@ class _OnTextInputWidgetState extends State<OnTextInputWidget> {
                         color: colorScheme.error,
                       ) ??
                       TextStyle(color: colorScheme.error),
-              errorStyle: const TextStyle(fontSize: 0),
+              errorStyle: _usesCustomErrorDisplay
+                  ? const TextStyle(fontSize: 0)
+                  : widget.errorStyle ??
+                      textTheme.bodySmall?.copyWith(
+                        color: widget.errorColor ?? colorScheme.error,
+                      ),
               contentPadding: contentPadding,
               enabledBorder: widget.enabledBorder?.copyWith(
                     borderSide: BorderSide(

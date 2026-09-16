@@ -12,21 +12,21 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   /// The [svg] parameter specifies an SVG icon to display as prefix.
   /// The [obscureText] parameter determines if this is a password field.
   const OnTextInputWidgetUserField({
-    Key? key,
+    super.key,
     this.autofocus = false,
     this.hintText = '',
     this.svg = '',
     this.prefixChild,
-    this.textEditingController,
+    this.controller,
     this.onChanged,
     this.onChangedProcessing,
     this.validator,
     this.keyboardType = TextInputType.text,
     this.obscureText = false,
     this.initialValue,
-    this.maxLine = 1,
-    this.minLine = 1,
-    this.enable = true,
+    this.maxLines = 1,
+    this.minLines = 1,
+    this.enabled = true,
     this.readOnly = false,
     this.border,
     this.isCollapsed = false,
@@ -36,7 +36,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
     this.autofillHints,
     this.suffixIcon,
     this.showDetailError = false,
-  }) : super(key: key);
+  });
 
   /// Whether the text field should automatically acquire focus when displayed.
   final bool autofocus;
@@ -55,7 +55,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   /// Controller for the text field. If omitted, one is created internally
   /// and disposed automatically; if supplied, disposing it remains the
   /// caller's responsibility.
-  final TextEditingController? textEditingController;
+  final TextEditingController? controller;
 
   /// Callback function triggered when the text changes.
   final void Function(String value)? onChanged;
@@ -84,21 +84,13 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   final String? initialValue;
 
   /// Maximum number of lines for the text field.
-  ///
-  /// Note the singular name; the equivalent on [OnTextInputWidget] is
-  /// `maxLines`.
-  final int? maxLine;
+  final int? maxLines;
 
   /// Minimum number of lines for the text field.
-  ///
-  /// Note the singular name; the equivalent on [OnTextInputWidget] is
-  /// `minLines`.
-  final int? minLine;
+  final int? minLines;
 
   /// Whether the text field is enabled.
-  ///
-  /// Note the name; the equivalent on [OnTextInputWidget] is `enabled`.
-  final bool enable;
+  final bool enabled;
 
   /// Whether the text field is read-only.
   final bool readOnly;
@@ -147,15 +139,15 @@ class _OnTextInputWidgetUserFieldState
   @override
   void initState() {
     super.initState();
-    _string = widget.textEditingController?.text ?? '';
+    _string = widget.controller?.text ?? '';
     _showText = !widget.obscureText;
   }
 
   @override
   void didUpdateWidget(OnTextInputWidgetUserField oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.textEditingController != oldWidget.textEditingController) {
-      _string = widget.textEditingController?.text ?? '';
+    if (widget.controller != oldWidget.controller) {
+      _string = widget.controller?.text ?? '';
     }
     if (widget.obscureText != oldWidget.obscureText) {
       _showText = !widget.obscureText;
@@ -166,19 +158,36 @@ class _OnTextInputWidgetUserFieldState
     if (widget.suffixIcon != null) return widget.suffixIcon;
 
     if (widget.obscureText) {
-      return _string.isEmpty
-          ? null
-          : GestureDetector(
-              onTap: () => setState(() => _showText = !_showText),
-              child: _sized(
-                child: _SVG(
-                  _showText
-                      ? 'packages/on_text_input_widget/assets/svg/eye_opened_icon.svg'
-                      : 'packages/on_text_input_widget/assets/svg/eye_closed_icon.svg',
-                  color: Theme.of(context).colorScheme.primary,
+      if (_string.isEmpty) return null;
+
+      final String label = _showText ? 'Hide password' : 'Show password';
+      return Semantics(
+        button: true,
+        label: label,
+        child: Tooltip(
+          message: label,
+          child: GestureDetector(
+            onTap: () => setState(() => _showText = !_showText),
+            //* Opaque so the whole padded area is tappable, not just the
+            //* glyph, which is well under the 48dp minimum target on its own.
+            behavior: HitTestBehavior.opaque,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(minWidth: _minTapTarget),
+              child: Center(
+                widthFactor: 1,
+                child: _sized(
+                  child: _SVG(
+                    _showText
+                        ? 'packages/on_text_input_widget/assets/svg/eye_opened_icon.svg'
+                        : 'packages/on_text_input_widget/assets/svg/eye_closed_icon.svg',
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
                 ),
               ),
-            );
+            ),
+          ),
+        ),
+      );
     }
 
     return null;
@@ -203,15 +212,15 @@ class _OnTextInputWidgetUserFieldState
       isDense: widget.isDense,
       isCollapsed: widget.isCollapsed,
       readOnly: widget.readOnly,
-      enabled: widget.enable,
+      enabled: widget.enabled,
       autofocus: widget.autofocus,
-      textEditingController: widget.textEditingController,
+      controller: widget.controller,
       initialValue: widget.initialValue,
       hintText: widget.hintText,
       keyboardType: widget.keyboardType,
       obscureText: !_showText,
-      maxLines: widget.maxLine,
-      minLines: widget.minLine,
+      maxLines: widget.maxLines,
+      minLines: widget.minLines,
       boxConstraints: widget.boxConstraints,
       showDetailError: widget.showDetailError,
       onFocusChange: (bool isFocused) {
@@ -219,7 +228,7 @@ class _OnTextInputWidgetUserFieldState
       },
       suffixIcon: _setSuffixIcon(),
       validator: widget.validator,
-      errorCheck: (bool error, String message) {
+      onError: (bool error, String message) {
         if (error) {
           setState(() {
             _string = '';

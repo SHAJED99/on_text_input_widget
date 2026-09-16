@@ -1,3 +1,46 @@
+## 0.3.0
+
+### Breaking — renames
+
+| Before | After | Widget |
+|---|---|---|
+| `textEditingController` | `controller` | both |
+| `errorCheck` | `onError` | `OnTextInputWidget` |
+| `onChangeDebounce` | `debounceDuration` | `OnTextInputWidget` |
+| `maxLine` / `minLine` | `maxLines` / `minLines` | `OnTextInputWidgetUserField` |
+| `enable` | `enabled` | `OnTextInputWidgetUserField` |
+
+The UserField names now match `OnTextInputWidget` and Flutter's own
+`TextField`, which they previously contradicted.
+
+### Breaking — error handling
+
+- **Fixed**: `FormState.validate()` now fails when the validator fails. It
+  previously returned `true` unconditionally and could not gate a submit.
+- **Fixed**: a failed validation no longer **clears the user's input**. The
+  message is shown via the built-in error text instead of being written into
+  the hint, so it stays visible while the user corrects the field.
+- **Fixed**: `errorBuilder` now renders without `showDetailError`. Supplying a
+  builder alone previously suppressed the default display without rendering
+  the builder, so the error appeared nowhere.
+- When `showDetailError` or `errorBuilder` is used, the built-in error text is
+  retained at zero size to carry the message to assistive technology, and the
+  visible copy is excluded from semantics so it is not announced twice.
+
+### Accessibility
+
+- The password visibility toggle is now a labelled semantic button
+  ("Show password" / "Hide password") with a tooltip, and its tap target meets
+  the 48dp minimum. It was previously an unlabelled 24x24 `GestureDetector`.
+
+### Other
+
+- Raised `flutter_lints` to `^5.0.0`; resolved all resulting analyzer issues
+  across `lib/`, `test/` and `example/` (super parameters, library name,
+  unused import and local, type annotations, line length)
+- Added regression tests for the `errorBuilder` and input-clearing fixes, and
+  assertions that `FormState.validate()` now reflects validity (17 tests)
+
 ## 0.2.0
 
 - **Breaking**: Raised minimum Flutter to 3.27.0 and Dart SDK to 3.6.0.

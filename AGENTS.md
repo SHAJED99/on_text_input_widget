@@ -61,7 +61,7 @@ The package uses `part`/`part of` to avoid exporting internal widgets. All priva
 - In `showDetailError` mode: error appears in an animated collapsible section below the field
 - `errorBuilder` customises the `showDetailError` section — it is only consulted
   when `showDetailError` is true (see `errorChild()`)
-- `errorCheck` fires when validation *fails*, and again with `false` when tapping
+- `onError` fires when validation *fails*, and again with `false` when tapping
   the field clears an error. It does not fire on successful validation
 
 ### UserField Password Toggle

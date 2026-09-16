@@ -1,4 +1,4 @@
-library on_text_input_widget;
+library;
 
 import 'dart:async';
 

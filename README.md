@@ -15,7 +15,7 @@ The floor is set by `flutter_svg`, not by any API used directly here.
 
 ```yaml
 dependencies:
-  on_text_input_widget: ^0.2.0
+  on_text_input_widget: ^0.3.0
 ```
 
 Then import:
@@ -59,22 +59,15 @@ OnTextInputWidget(
 )
 ```
 
-> **Gating a submit:** `validator` drives this widget's own error display
-> only. The underlying form field always reports success, so
-> `_formKey.currentState!.validate()` returns `true` even when validation
-> failed, and cannot be used to block submission. Call your validation
-> function directly instead:
->
-> ```dart
-> if (validateEmail(controller.text) != null) return; // blocked
-> submit();
-> ```
+> **Gating a submit:** since 0.3.0 the validator's result reaches the enclosing
+> `Form`, so `_formKey.currentState!.validate()` returns `false` on failure and
+> can be used to block submission. Earlier versions always returned `true`.
 
 #### Properties
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `textEditingController` | `TextEditingController?` | Auto-created | Controller for the text field |
+| `controller` | `TextEditingController?` | Auto-created | Controller for the text field |
 | `hintText` | `String` | `''` | Placeholder text |
 | `initialValue` | `String?` | null | Initial text (use only without controller) |
 | `obscureText` | `bool` | false | Hide text (passwords) |
@@ -141,13 +134,13 @@ OnTextInputWidget(
 | **Callbacks** | | | |
 | `onChanged` | `void Function(String)?` | null | Fires on every keystroke |
 | `onChangedProcessing` | `Future<void>? Function(String)?` | null | Debounced async callback |
-| `onChangeDebounce` | `Duration` | 1000ms | Debounce delay for processing |
+| `debounceDuration` | `Duration` | 1000ms | Debounce delay for processing |
 | `onComplete` | `void Function(String?)?` | null | Fires on editing complete |
 | `onTap` | `void Function()?` | null | Fires on tap |
 | `onTapOutside` | `void Function(PointerDownEvent)?` | null | Fires on tap outside |
 | `onFocusChange` | `Function(bool)?` | null | Focus state changed |
 | `validator` | `String? Function(String?)?` | null | Form field validator |
-| `errorCheck` | `void Function(bool, String)?` | null | Called when validation fails, and with `false` when tapping the field clears an error. Not called on successful validation |
+| `onError` | `void Function(bool, String)?` | null | Called when validation fails, and with `false` when tapping the field clears an error. Not called on successful validation |
 | `errorBuilder` | `Widget Function(String)?` | null | Custom error widget |
 | `showDetailError` | `bool` | false | Show error below field |
 
@@ -180,7 +173,7 @@ OnTextInputWidgetUserField(
 
 | Property | Type | Default | Description |
 |----------|------|---------|-------------|
-| `textEditingController` | `TextEditingController?` | Auto-created | Controller |
+| `controller` | `TextEditingController?` | Auto-created | Controller |
 | `hintText` | `String` | `''` | Placeholder |
 | `initialValue` | `String?` | null | Initial text |
 | `svg` | `String` | `''` | SVG asset path for prefix icon |
@@ -189,10 +182,10 @@ OnTextInputWidgetUserField(
 | `obscureText` | `bool` | false | Password mode |
 | `keyboardType` | `TextInputType` | `TextInputType.text` | Keyboard type |
 | `autofocus` | `bool` | false | Auto-focus |
-| `enable` | `bool` | true | Editable |
+| `enabled` | `bool` | true | Editable |
 | `readOnly` | `bool` | false | Read-only |
-| `maxLine` | `int?` | 1 | Max lines |
-| `minLine` | `int?` | 1 | Min lines |
+| `maxLines` | `int?` | 1 | Max lines |
+| `minLines` | `int?` | 1 | Min lines |
 | `border` | `InputBorder?` | null | Border for all states |
 | `isDense` | `bool` | true | Dense layout |
 | `isCollapsed` | `bool` | false | Collapsed decoration |
@@ -208,14 +201,14 @@ OnTextInputWidgetUserField(
 
 ### Debounced Async Processing
 
-The `onChangedProcessing` callback fires only after the user stops typing for `onChangeDebounce` duration. If processing is running, the spinner automatically shows at the prefix/suffix icon.
+The `onChangedProcessing` callback fires only after the user stops typing for `debounceDuration` duration. If processing is running, the spinner automatically shows at the prefix/suffix icon.
 
 ```dart
 OnTextInputWidget(
   hintText: 'Search products',
   prefixIcon: Icon(Icons.search),
   showPrefixLoadingIcon: true,
-  onChangeDebounce: Duration(milliseconds: 500),
+  debounceDuration: Duration(milliseconds: 500),
   onChangedProcessing: (query) async {
     final results = await api.search(query);
     // Update UI with results
@@ -225,9 +218,11 @@ OnTextInputWidget(
 
 ### Error Display Modes
 
-- **Default (in-box)**: Error message replaces the hint text and **the input is cleared**. Because the message lives in the hint, it disappears as soon as the user starts retyping — prefer `showDetailError` for anything typed at length.
+- **Default**: Error message appears via the built-in error text below the field. The input is preserved.
 - **showDetailError**: Error message appears below the field in a collapsible animated section
-- **errorBuilder**: Full custom widget for error display. **Requires `showDetailError: true`** — supplying a builder alone suppresses the default display without rendering the builder, so the error appears nowhere.
+- **errorBuilder**: Full custom widget for error display; works with or without `showDetailError`
+
+All modes report failure to an enclosing `Form`, so `FormState.validate()` gates a submit normally.
 
 ```dart
 OnTextInputWidget(

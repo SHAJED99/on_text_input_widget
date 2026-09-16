@@ -2,14 +2,13 @@ part of '../../on_text_input_widget.dart';
 
 class _CustomAnimatedSize extends StatelessWidget {
   const _CustomAnimatedSize({
-    Key? key,
     this.child,
     required this.alignment,
     required this.duration,
     required this.curve,
     required this.clipBehavior,
     this.widthFactor,
-  }) : super(key: key);
+  });
   final Widget? child;
   final AlignmentGeometry alignment;
   final Duration duration;

@@ -25,7 +25,7 @@ void main() {
           home: Scaffold(
             body: OnTextInputWidget(
               hintText: 'Input',
-              onChanged: (value) => changedValue = value,
+              onChanged: (String value) => changedValue = value,
             ),
           ),
         ),
@@ -57,12 +57,12 @@ void main() {
     testWidgets('updates text via TextEditingController', (
       WidgetTester tester,
     ) async {
-      final controller = TextEditingController();
+      final TextEditingController controller = TextEditingController();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: OnTextInputWidget(
-              textEditingController: controller,
+              controller: controller,
               hintText: 'Input',
             ),
           ),
@@ -78,7 +78,7 @@ void main() {
     testWidgets('displays error when validator returns message', (
       WidgetTester tester,
     ) async {
-      final formKey = GlobalKey<FormState>();
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -86,7 +86,7 @@ void main() {
               key: formKey,
               child: OnTextInputWidget(
                 hintText: 'Email',
-                validator: (value) {
+                validator: (String? value) {
                   if (value?.isEmpty ?? true) return 'Required field';
                   return null;
                 },
@@ -96,26 +96,81 @@ void main() {
         ),
       );
 
-      formKey.currentState!.validate();
+      final bool isValid = formKey.currentState!.validate();
       await tester.pump();
 
+      expect(isValid, isFalse);
       expect(find.text('Required field'), findsOneWidget);
+    });
+
+    testWidgets('validation failure preserves the entered text', (
+      WidgetTester tester,
+    ) async {
+      final TextEditingController controller =
+          TextEditingController(text: 'not-an-email');
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Form(
+              key: formKey,
+              child: OnTextInputWidget(
+                controller: controller,
+                hintText: 'Email',
+                validator: (String? value) =>
+                    value!.contains('@') ? null : 'Invalid email',
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(formKey.currentState!.validate(), isFalse);
+      await tester.pump();
+
+      expect(controller.text, 'not-an-email');
+    });
+
+    testWidgets('errorBuilder renders without showDetailError', (
+      WidgetTester tester,
+    ) async {
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Form(
+              key: formKey,
+              child: OnTextInputWidget(
+                hintText: 'Input',
+                validator: (String? value) => 'Always fails',
+                errorBuilder: (String message) => Text('custom: $message'),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(formKey.currentState!.validate(), isFalse);
+      await tester.pump();
+
+      expect(find.text('custom: Always fails'), findsOneWidget);
     });
 
     testWidgets('does not show error for valid input', (
       WidgetTester tester,
     ) async {
-      final controller = TextEditingController(text: 'valid@email.com');
-      final formKey = GlobalKey<FormState>();
+      final TextEditingController controller =
+          TextEditingController(text: 'valid@email.com');
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: Form(
               key: formKey,
               child: OnTextInputWidget(
-                textEditingController: controller,
+                controller: controller,
                 hintText: 'Email',
-                validator: (value) {
+                validator: (String? value) {
                   if (value?.isEmpty ?? true) return 'Required field';
                   return null;
                 },
@@ -125,16 +180,17 @@ void main() {
         ),
       );
 
-      formKey.currentState!.validate();
+      final bool isValid = formKey.currentState!.validate();
       await tester.pump();
 
+      expect(isValid, isTrue);
       expect(find.text('Required field'), findsNothing);
     });
 
     testWidgets('showDetailError displays error below the field', (
       WidgetTester tester,
     ) async {
-      final formKey = GlobalKey<FormState>();
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -143,7 +199,7 @@ void main() {
               child: OnTextInputWidget(
                 hintText: 'Input',
                 showDetailError: true,
-                validator: (value) {
+                validator: (String? value) {
                   if (value?.isEmpty ?? true) return 'Error below';
                   return null;
                 },
@@ -153,10 +209,13 @@ void main() {
         ),
       );
 
-      formKey.currentState!.validate();
+      final bool isValid = formKey.currentState!.validate();
       await tester.pump();
 
-      expect(find.text('Error below'), findsOneWidget);
+      expect(isValid, isFalse);
+      //* Once in the visible section below the field, once in the built-in
+      //* error text, which is rendered at zero size to carry semantics.
+      expect(find.text('Error below'), findsNWidgets(2));
     });
 
     testWidgets('disabled field is not editable', (
@@ -169,7 +228,7 @@ void main() {
             body: OnTextInputWidget(
               hintText: 'Disabled',
               enabled: false,
-              onChanged: (value) => changedValue = value,
+              onChanged: (String value) => changedValue = value,
             ),
           ),
         ),
@@ -184,16 +243,17 @@ void main() {
     testWidgets('readOnly field blocks keyboard input', (
       WidgetTester tester,
     ) async {
-      final controller = TextEditingController(text: 'readonly text');
+      final TextEditingController controller =
+          TextEditingController(text: 'readonly text');
       String changedValue = '';
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: OnTextInputWidget(
-              textEditingController: controller,
+              controller: controller,
               hintText: 'ReadOnly',
               readOnly: true,
-              onChanged: (value) => changedValue = value,
+              onChanged: (String value) => changedValue = value,
             ),
           ),
         ),
@@ -222,7 +282,8 @@ void main() {
       await tester.enterText(find.byType(TextFormField), '1234567890');
       await tester.pump();
 
-      final textField = tester.widget<TextFormField>(find.byType(TextFormField));
+      final TextFormField textField =
+          tester.widget<TextFormField>(find.byType(TextFormField));
       expect(textField.controller?.text.length, lessThanOrEqualTo(5));
     });
 
@@ -235,7 +296,7 @@ void main() {
           home: Scaffold(
             body: OnTextInputWidget(
               hintText: 'Complete',
-              onComplete: (value) => completedValue = value ?? '',
+              onComplete: (String? value) => completedValue = value ?? '',
             ),
           ),
         ),
@@ -270,7 +331,7 @@ void main() {
           home: Scaffold(
             body: OnTextInputWidgetUserField(
               hintText: 'Input',
-              onChanged: (value) => changedValue = value,
+              onChanged: (String value) => changedValue = value,
             ),
           ),
         ),
@@ -283,7 +344,7 @@ void main() {
     });
 
     testWidgets('validates via UserField', (WidgetTester tester) async {
-      final formKey = GlobalKey<FormState>();
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
@@ -291,7 +352,7 @@ void main() {
               key: formKey,
               child: OnTextInputWidgetUserField(
                 hintText: 'Password',
-                validator: (value) {
+                validator: (String? value) {
                   if (value?.isEmpty ?? true) return 'Password required';
                   return null;
                 },
@@ -308,12 +369,13 @@ void main() {
     });
 
     testWidgets('toggles password visibility', (WidgetTester tester) async {
-      final controller = TextEditingController(text: 'secret123');
+      final TextEditingController controller =
+          TextEditingController(text: 'secret123');
       await tester.pumpWidget(
         MaterialApp(
           home: Scaffold(
             body: OnTextInputWidgetUserField(
-              textEditingController: controller,
+              controller: controller,
               hintText: 'Password',
               obscureText: true,
             ),
@@ -321,12 +383,12 @@ void main() {
         ),
       );
 
-      final eyeToggle = find.byType(GestureDetector);
+      final Finder eyeToggle = find.byType(GestureDetector);
       await tester.tap(eyeToggle);
       await tester.pump();
 
-      final textField = tester.widget<TextFormField>(find.byType(TextFormField));
-      final state = tester.state<EditableTextState>(find.byType(EditableText));
+      final EditableTextState state =
+          tester.state<EditableTextState>(find.byType(EditableText));
       expect(state.widget.obscureText, isFalse);
     });
   });

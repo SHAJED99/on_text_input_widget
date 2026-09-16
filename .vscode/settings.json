@@ -1,4 +1,18 @@
 {
   "cSpell.language": "en,en-GB,en-US,lorem",
-  "dart.flutterSdkPath": ".fvm/versions/3.27.4"
+  "dart.flutterSdkPath": ".fvm/versions/3.27.4",
+  "cSpell.words": [
+    "Panna",
+    "Shajedur",
+    "dartdoc",
+    "debounce",
+    "debounced",
+    "debouncing",
+    "fvm",
+    "pubspec",
+    "svgs",
+    "throughs",
+    "unfocus",
+    "unfocuses"
+  ]
 }
