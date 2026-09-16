@@ -218,6 +218,40 @@ void main() {
       expect(find.text('Error below'), findsNWidgets(2));
     });
 
+    testWidgets('error display does not overflow a constrained parent', (
+      WidgetTester tester,
+    ) async {
+      final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+      await tester.pumpWidget(
+        MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 160,
+                child: Form(
+                  key: formKey,
+                  child: OnTextInputWidget(
+                    hintText: 'Email',
+                    validator: (String? value) =>
+                        'A deliberately long validation message that wraps',
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      expect(formKey.currentState!.validate(), isFalse);
+      await tester.pumpAndSettle();
+
+      expect(tester.takeException(), isNull);
+      expect(
+        find.text('A deliberately long validation message that wraps'),
+        findsOneWidget,
+      );
+    });
+
     testWidgets('disabled field is not editable', (
       WidgetTester tester,
     ) async {
@@ -366,6 +400,57 @@ void main() {
       await tester.pump();
 
       expect(find.text('Password required'), findsOneWidget);
+    });
+
+    testWidgets('password toggle does not overflow a narrow field', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 140,
+                child: OnTextInputWidgetUserField(
+                  obscureText: true,
+                  hintText: 'Password',
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'secret');
+      await tester.pumpAndSettle();
+
+      expect(find.byTooltip('Show password'), findsOneWidget);
+      expect(tester.takeException(), isNull);
+    });
+
+    testWidgets('password toggle is a labelled semantic button', (
+      WidgetTester tester,
+    ) async {
+      await tester.pumpWidget(
+        const MaterialApp(
+          home: Scaffold(
+            body: OnTextInputWidgetUserField(
+              obscureText: true,
+              hintText: 'Password',
+            ),
+          ),
+        ),
+      );
+
+      await tester.enterText(find.byType(TextFormField), 'secret');
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Show password'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Show password'));
+      await tester.pumpAndSettle();
+
+      expect(find.bySemanticsLabel('Hide password'), findsOneWidget);
     });
 
     testWidgets('toggles password visibility', (WidgetTester tester) async {

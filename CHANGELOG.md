@@ -38,8 +38,10 @@ The UserField names now match `OnTextInputWidget` and Flutter's own
 - Raised `flutter_lints` to `^5.0.0`; resolved all resulting analyzer issues
   across `lib/`, `test/` and `example/` (super parameters, library name,
   unused import and local, type annotations, line length)
-- Added regression tests for the `errorBuilder` and input-clearing fixes, and
-  assertions that `FormState.validate()` now reflects validity (17 tests)
+- Added regression tests for the `errorBuilder` and input-clearing fixes,
+  assertions that `FormState.validate()` now reflects validity, layout tests
+  covering the password toggle and the error display in narrow parents, and a
+  semantics test for the toggle's label (15 tests to 20)
 
 ### Documentation and constraints
 

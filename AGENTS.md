@@ -20,7 +20,7 @@ fvm flutter pub get
 # Static analysis
 fvm dart analyze
 
-# Run package tests (15 tests)
+# Run package tests (20 tests)
 fvm flutter test
 
 # Run example app tests (must run from inside example/ — `flutter test example/`
@@ -42,7 +42,7 @@ lib/
       user_field.dart             # OnTextInputWidgetUserField + _OnTextInputWidgetUserFieldState
 
 test/
-  on_text_input_widget_test.dart   # 15 widget tests covering both widgets
+  on_text_input_widget_test.dart   # 20 widget tests covering both widgets
 ```
 
 The package uses `part`/`part of` to avoid exporting internal widgets. All private types (`_CustomAnimatedSize`, `_SVG`, `_default*` constants) are accessible across all source files within the library.
@@ -102,7 +102,7 @@ When `obscureText` is true, a visibility toggle (eye icon) appears as the suffix
 ## Notes for Contributors
 
 - Run `fvm dart analyze` before committing (not `analyze lib/` — that hides issues under `test/`)
-- Run `fvm flutter test` — all 15 tests must pass
+- Run `fvm flutter test` — all 20 tests must pass
 - Do not commit auto-generated files from `example/android/`, `example/linux/`, `example/macos/`, `example/windows/` unless a Flutter SDK upgrade requires it
 - All private types start with underscore and are accessible across the library via `part`/`part of`
 - FVM is configured at Flutter 3.27.4 — install with `fvm install`
