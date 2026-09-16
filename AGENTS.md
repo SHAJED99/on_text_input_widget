@@ -11,7 +11,7 @@
 fvm flutter pub get
 
 # Static analysis
-fvm dart analyze lib/
+fvm dart analyze
 
 # Run package tests (15 tests)
 fvm flutter test
@@ -51,8 +51,10 @@ The package uses `part`/`part of` to avoid exporting internal widgets. All priva
 - Validator returns `String?` — `null` means valid, non-null means error
 - In default mode: input is cleared, hint text shows the error message
 - In `showDetailError` mode: error appears in an animated collapsible section below the field
-- `errorBuilder` allows full custom error rendering
-- `errorCheck` callback fires whenever validation runs
+- `errorBuilder` customises the `showDetailError` section — it is only consulted
+  when `showDetailError` is true (see `errorChild()`)
+- `errorCheck` fires when validation *fails*, and again with `false` when tapping
+  the field clears an error. It does not fire on successful validation
 
 ### UserField Password Toggle
 When `obscureText` is true, a visibility toggle (eye icon) appears as the suffix icon once text is entered. On focus loss, the text is automatically re-hidden for security.
@@ -65,10 +67,12 @@ When `obscureText` is true, a visibility toggle (eye icon) appears as the suffix
 
 ## Flutter Version Requirements
 
-- **Declared**: Flutter >=3.3.0, Dart SDK >=3.0.0
-- APIs requiring 3.0+: `textTheme.titleMedium`, `textTheme.bodySmall`
-- APIs requiring 3.3+: `onTapOutside`
-- Package uses `flutter_svg: ^2.0.10+1` for SVG rendering
+- **Declared**: Flutter >=3.27.0, Dart SDK >=3.6.0
+- The floor is set by `flutter_svg` (`^2.0.10+1` resolves to 2.2.0, which itself
+  requires Dart `^3.6.0` / Flutter `>=3.27.0`), not by any API used here.
+- Previously declared Flutter >=3.3.0 / Dart >=3.0.0, which was unsatisfiable:
+  Flutter 3.3 ships Dart 2.18, and Dart 3.0 first shipped in Flutter 3.10.
+- Developed and tested against the FVM pin, Flutter 3.27.4 / Dart 3.6.2.
 
 ## File Manifest
 
@@ -89,7 +93,7 @@ When `obscureText` is true, a visibility toggle (eye icon) appears as the suffix
 
 ## Notes for Contributors
 
-- Run `fvm dart analyze lib/` before committing — 0 issues required
+- Run `fvm dart analyze` before committing (not `analyze lib/` — that hides issues under `test/`)
 - Run `fvm flutter test` — all 15 tests must pass
 - Do not commit auto-generated files from `example/android/`, `example/linux/`, `example/macos/`, `example/windows/` unless a Flutter SDK upgrade requires it
 - All private types start with underscore and are accessible across the library via `part`/`part of`

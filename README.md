@@ -135,7 +135,7 @@ Form(
 | `onTapOutside` | `void Function(PointerDownEvent)?` | null | Fires on tap outside |
 | `onFocusChange` | `Function(bool)?` | null | Focus state changed |
 | `validator` | `String? Function(String?)?` | null | Form field validator |
-| `errorCheck` | `void Function(bool, String)?` | null | Called when validation runs |
+| `errorCheck` | `void Function(bool, String)?` | null | Called when validation fails, and with `false` when tapping the field clears an error. Not called on successful validation |
 | `errorBuilder` | `Widget Function(String)?` | null | Custom error widget |
 | `showDetailError` | `bool` | false | Show error below field |
 
