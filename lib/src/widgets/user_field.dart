@@ -44,24 +44,34 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   /// Placeholder text displayed when the text field is empty.
   final String hintText;
 
-  /// Path to an SVG asset to be displayed as a prefix icon.
+  /// Path to an SVG asset displayed as the prefix icon — an asset path
+  /// string, not a widget. The asset must be declared in the consuming
+  /// app's `pubspec.yaml`.
   final String svg;
 
   /// Optional widget to display before the text input, alongside the SVG icon.
   final Widget? prefixChild;
 
-  /// Controller for the text field. If not provided, a new controller will be
-  /// created.
+  /// Controller for the text field. If omitted, one is created internally
+  /// and disposed automatically; if supplied, disposing it remains the
+  /// caller's responsibility.
   final TextEditingController? textEditingController;
 
   /// Callback function triggered when the text changes.
   final void Function(String value)? onChanged;
 
-  /// Async callback function for processing text changes with debouncing.
-  /// Useful for search operations or API calls.
+  /// Async callback for processing text changes, debounced. Useful for
+  /// search operations or API calls.
+  ///
+  /// Supplying this automatically enables the prefix loading icon. Calls
+  /// never overlap, only the most recent value is processed, and thrown
+  /// exceptions are swallowed — handle errors inside the callback.
   final Future<void>? Function(String)? onChangedProcessing;
 
-  /// Validation function that returns an error message string or null if valid.
+  /// Validation function returning an error message, or `null` if valid.
+  ///
+  /// Drives this widget's error display only; an enclosing [FormState.validate]
+  /// always returns `true` and cannot be used to gate a submit.
   final String? Function(String? value)? validator;
 
   /// The type of keyboard to use for editing the text.
@@ -74,18 +84,28 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   final String? initialValue;
 
   /// Maximum number of lines for the text field.
+  ///
+  /// Note the singular name; the equivalent on [OnTextInputWidget] is
+  /// `maxLines`.
   final int? maxLine;
 
   /// Minimum number of lines for the text field.
+  ///
+  /// Note the singular name; the equivalent on [OnTextInputWidget] is
+  /// `minLines`.
   final int? minLine;
 
   /// Whether the text field is enabled.
+  ///
+  /// Note the name; the equivalent on [OnTextInputWidget] is `enabled`.
   final bool enable;
 
   /// Whether the text field is read-only.
   final bool readOnly;
 
-  /// Custom border for the text field.
+  /// Custom border, applied to all five border states (enabled, focused,
+  /// error, disabled, focusedError). Use [OnTextInputWidget] directly to
+  /// style states separately.
   final InputBorder? border;
 
   /// Whether the decoration is collapsed (compact).
@@ -106,7 +126,10 @@ class OnTextInputWidgetUserField extends StatefulWidget {
   /// Optional widget to display after the text input.
   final Widget? suffixIcon;
 
-  /// Whether to show detailed error messages below the field.
+  /// Whether to show the error message below the field instead of
+  /// replacing the hint text inside it.
+  ///
+  /// When `false`, a failed validation clears the field.
   final bool showDetailError;
 
   @override

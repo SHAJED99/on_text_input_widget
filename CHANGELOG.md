@@ -1,3 +1,26 @@
+## 0.2.0
+
+- **Breaking**: Raised minimum Flutter to 3.27.0 and Dart SDK to 3.6.0.
+  The previously declared pair (Flutter >=3.3.0 with Dart >=3.0.0) was
+  unsatisfiable — Flutter 3.3 ships Dart 2.18, and Dart 3.0 first shipped in
+  Flutter 3.10. The real floor comes from `flutter_svg`, whose resolved 2.2.0
+  requires Dart ^3.6.0 / Flutter >=3.27.0.
+- Docs: Documented the behaviour of `errorBuilder`, which renders nothing
+  unless `showDetailError` is also `true`
+- Docs: Documented that `validator` does not gate `FormState.validate()`,
+  which always reports success
+- Docs: Documented that the default error mode clears the field, that
+  `onChangedProcessing` drops intermediate values and swallows exceptions,
+  and that the loading-icon flags are inert without it
+- Docs: Documented controller disposal ownership, and that `initialValue`
+  may be combined with a controller
+- Docs: Corrected `errorCheck`, which fires on validation failure and on
+  error-clearing only, never on success
+- Docs: Added `doc/using-on-text-input-widget.md` (usage guide) and
+  `doc/audit-2026-09-16.md` (known bugs and accessibility gaps)
+- Docs: Added `CLAUDE.md`; corrected the analyze and example-test commands
+  in `AGENTS.md`
+
 ## 0.1.0
 
 - **Breaking**: Renamed `onChangeDebouncer` to `onChangeDebounce`

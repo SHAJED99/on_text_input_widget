@@ -85,9 +85,11 @@ class OnTextInputWidget extends StatefulWidget {
 
   /// A controller for an editable text field.
   ///
-  /// Whenever the user modifies a text field with an associated
-  /// TextEditingController, the text field updates value and the controller
-  /// notifies its listeners.
+  /// If omitted, one is created internally and disposed automatically. If
+  /// supplied, **disposing it remains the caller's responsibility**.
+  ///
+  /// Unlike [TextFormField], this may be combined with [initialValue],
+  /// which is written into the controller after the first frame.
   final TextEditingController? textEditingController;
 
   /// Text that suggests what sort of input the field accepts.
@@ -138,7 +140,14 @@ class OnTextInputWidget extends StatefulWidget {
   /// Whether to select all text when the field is tapped.
   final bool fullTextSelection;
 
-  /// Whether to show detailed error messages below the field.
+  /// Whether to show the error message in an animated section below the
+  /// field, instead of replacing the hint text inside it.
+  ///
+  /// Prefer `true` for anything the user types at length: when this is
+  /// `false`, a failed validation **clears the field**, and the message
+  /// (shown as the hint) disappears again as soon as they start retyping.
+  ///
+  /// Must also be `true` for [errorBuilder] to have any effect.
   final bool showDetailError;
 
   /// Custom loading indicator widget.
@@ -219,10 +228,18 @@ class OnTextInputWidget extends StatefulWidget {
   /// Icon to display after the input.
   final Widget? suffixIcon;
 
-  /// Whether to show a loading indicator before the input.
+  /// Whether to replace [prefixIcon] with a loading indicator while an
+  /// [onChangedProcessing] call is in flight.
+  ///
+  /// Has no effect without [onChangedProcessing] — there is nothing to
+  /// wait on, so the indicator never appears.
   final bool showPrefixLoadingIcon;
 
-  /// Whether to show a loading indicator after the input.
+  /// Whether to replace [suffixIcon] with a loading indicator while an
+  /// [onChangedProcessing] call is in flight.
+  ///
+  /// Has no effect without [onChangedProcessing] — there is nothing to
+  /// wait on, so the indicator never appears.
   final bool showSuffixLoadingIcon;
 
   /// Background color of the text field.
@@ -277,7 +294,13 @@ class OnTextInputWidget extends StatefulWidget {
   /// Called when tapping outside the field.
   final void Function(PointerDownEvent pointerDownEvent)? onTapOutside;
 
-  /// Validates the input and returns an error message if invalid.
+  /// Validates the input, returning an error message, or `null` if valid.
+  ///
+  /// Note: this drives the widget's own error display only. The underlying
+  /// [FormField] validator always reports success, so an enclosing
+  /// [FormState.validate] returns `true` even when this fails and **cannot be
+  /// used to gate a submit**. Call your validation function directly for
+  /// that.
   final String? Function(String? value)? validator;
 
   /// Called when the field is tapped.
@@ -286,13 +309,29 @@ class OnTextInputWidget extends StatefulWidget {
   /// Called when the text changes.
   final void Function(String value)? onChanged;
 
-  /// Async callback for processing text changes with debouncing.
+  /// Async callback for processing text changes, debounced by
+  /// [onChangeDebounce]. Intended for server-backed search-as-you-type.
+  ///
+  /// Calls never overlap. Keystrokes arriving while a call is in flight are
+  /// coalesced, and only the most recent value is processed once it
+  /// completes — intermediate values are dropped, not replayed.
+  ///
+  /// Exceptions thrown by this callback are **swallowed** so the field can
+  /// recover; nothing is logged or rethrown. Handle errors inside it.
   final Future<void>? Function(String value)? onChangedProcessing;
 
-  /// Called when validation fails.
+  /// Called with `(true, message)` when validation fails, and with
+  /// `(false, '')` when tapping the field clears an existing error.
+  ///
+  /// Not called on successful validation.
   final void Function(bool error, String message)? errorCheck;
 
-  /// Custom builder for error messages.
+  /// Custom builder for the error message shown below the field.
+  ///
+  /// **Requires [showDetailError] to be `true`.** Supplying a builder
+  /// disables the default in-field error display, but the builder itself is
+  /// only rendered when [showDetailError] is set — supplying this alone
+  /// means the error is displayed nowhere.
   final Widget Function(String message)? errorBuilder;
 
   /// Creates a [FormField] that contains a [TextField].

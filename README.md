@@ -6,14 +6,16 @@ A feature-rich, highly customizable text input widget for Flutter with built-in 
 
 | Platform | Minimum Version |
 |----------|----------------|
-| Dart SDK | >=3.0.0 |
-| Flutter | >=3.3.0 |
+| Dart SDK | >=3.6.0 |
+| Flutter | >=3.27.0 |
+
+The floor is set by `flutter_svg`, not by any API used directly here.
 
 ## Installation
 
 ```yaml
 dependencies:
-  on_text_input_widget: ^0.0.8
+  on_text_input_widget: ^0.2.0
 ```
 
 Then import:
@@ -42,21 +44,31 @@ OnTextInputWidget(
 )
 ```
 
-#### Form Validation
+#### Validation
 
 ```dart
-Form(
-  key: _formKey,
-  child: OnTextInputWidget(
-    hintText: 'Email',
-    validator: (value) {
-      if (value?.isEmpty ?? true) return 'Required';
-      return null;
-    },
-    showDetailError: true,  // Show error below the field
-  ),
+String? validateEmail(String? value) {
+  if (value?.isEmpty ?? true) return 'Required';
+  return null;
+}
+
+OnTextInputWidget(
+  hintText: 'Email',
+  validator: validateEmail,
+  showDetailError: true,  // Show error below the field
 )
 ```
+
+> **Gating a submit:** `validator` drives this widget's own error display
+> only. The underlying form field always reports success, so
+> `_formKey.currentState!.validate()` returns `true` even when validation
+> failed, and cannot be used to block submission. Call your validation
+> function directly instead:
+>
+> ```dart
+> if (validateEmail(controller.text) != null) return; // blocked
+> submit();
+> ```
 
 #### Properties
 
@@ -213,9 +225,9 @@ OnTextInputWidget(
 
 ### Error Display Modes
 
-- **Default (in-box)**: Error message replaces the hint text and the input is cleared
+- **Default (in-box)**: Error message replaces the hint text and **the input is cleared**. Because the message lives in the hint, it disappears as soon as the user starts retyping — prefer `showDetailError` for anything typed at length.
 - **showDetailError**: Error message appears below the field in a collapsible animated section
-- **errorBuilder**: Full custom widget for error display
+- **errorBuilder**: Full custom widget for error display. **Requires `showDetailError: true`** — supplying a builder alone suppresses the default display without rendering the builder, so the error appears nowhere.
 
 ```dart
 OnTextInputWidget(
