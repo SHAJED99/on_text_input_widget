@@ -4,6 +4,13 @@
 
 `on_text_input_widget` — a Flutter package providing `OnTextInputWidget` (a highly customizable text input) and `OnTextInputWidgetUserField` (a login-form-oriented wrapper with password toggle and SVG icons).
 
+## Further Reading
+
+- `doc/using-on-text-input-widget.md` — how to *use* the two public widgets
+  (debounce pipeline, error modes and their traps, controller ownership, styling).
+- `doc/audit-2026-09-16.md` — known bugs and accessibility gaps, deliberately
+  unfixed, with rationale.
+
 ## Build & Test Commands
 
 ```bash
@@ -16,8 +23,9 @@ fvm dart analyze
 # Run package tests (15 tests)
 fvm flutter test
 
-# Run example app tests
-fvm flutter test example/
+# Run example app tests (must run from inside example/ — `flutter test example/`
+# from the root cannot resolve `package:example`)
+cd example && fvm flutter test
 ```
 
 ## Architecture

@@ -4,6 +4,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `AGENTS.md` covers the same ground in more detail (file manifest, API notes); keep the two in sync when architecture changes.
 
+For *consuming* the package rather than developing it — which parameter does what, the error-mode traps, controller ownership — read `doc/using-on-text-input-widget.md` instead. `doc/audit-2026-09-16.md` records known bugs and accessibility gaps that are deliberately unfixed.
+
 ## Commands
 
 The project pins Flutter 3.27.4 via FVM (`.fvmrc`, `.vscode/settings.json` points at `.fvm/versions/3.27.4`). Prefix every Flutter/Dart command with `fvm`.
