@@ -26,6 +26,7 @@ class OnTextInputWidgetUserField extends StatefulWidget {
     this.initialValue,
     this.maxLines = 1,
     this.minLines = 1,
+    this.maxLength,
     this.enabled = true,
     this.readOnly = false,
     this.border,
@@ -88,6 +89,10 @@ class OnTextInputWidgetUserField extends StatefulWidget {
 
   /// Minimum number of lines for the text field.
   final int? minLines;
+
+  /// Maximum number of characters allowed in the text field. When set, a
+  /// character counter is shown below the field.
+  final int? maxLength;
 
   /// Whether the text field is enabled.
   final bool enabled;
@@ -221,6 +226,7 @@ class _OnTextInputWidgetUserFieldState
       obscureText: !_showText,
       maxLines: widget.maxLines,
       minLines: widget.minLines,
+      maxLength: widget.maxLength,
       boxConstraints: widget.boxConstraints,
       showDetailError: widget.showDetailError,
       onFocusChange: (bool isFocused) {

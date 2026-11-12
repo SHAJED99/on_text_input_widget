@@ -1,3 +1,8 @@
+## Unreleased
+
+- Added `maxLength` to `OnTextInputWidgetUserField`, forwarded to the
+  underlying `OnTextInputWidget`.
+
 ## 0.2.0
 
 ### Breaking — renames
